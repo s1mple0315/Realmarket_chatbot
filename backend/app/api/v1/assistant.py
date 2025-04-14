@@ -6,11 +6,12 @@ from app.models.assistant import Assistant, AssistantConfig, AssistantMongoModel
 from fastapi import Request
 
 from app.services.assitant_service import add_message, create_assistant, get_assistant, run_chat, start_new_chat
+from app.services.auth_service import verify_token
 
 router = APIRouter()
 
 @router.post("/", response_model=Assistant)
-async def create_new_assistant(assistant_config: AssistantConfig, request: Request):
+async def create_new_assistant(assistant_config: AssistantConfig, request: Request, user_id: str = Depends(verify_token)):
     user_id = request.state.user_id
     
     if not user_id:
@@ -29,7 +30,7 @@ async def create_new_assistant(assistant_config: AssistantConfig, request: Reque
     
     assistant_data = AssistantMongoModel(
         user_id=user_id,
-        assistant_id=assistant['id'],
+        assistant_id=assistant.id,
         name=assistant_config.name,
         instructions=assistant_config.instructions,
         tone=assistant_config.tone,

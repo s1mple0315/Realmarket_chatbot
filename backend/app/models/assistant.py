@@ -1,19 +1,24 @@
-
 from pydantic import BaseModel
-from typing import Optional, Dict
+from typing import List, Optional, Dict
 from bson import ObjectId
 import datetime
 from app.database import db
 
+
 class AssistantConfig(BaseModel):
     name: str
     instructions: str
+    description: Optional[str] = None  
     tone: Optional[str] = "neutral"  
-    website_data: Optional[Dict] = {}
+    website_data: Optional[dict] = (
+        None  
+    )
+    tools: Optional[List[str]] = []
+
 
 class Assistant(BaseModel):
     id: Optional[str] = None
-    user_id: str  
+    user_id: str
     name: str
     instructions: str
     tone: str
@@ -23,13 +28,15 @@ class Assistant(BaseModel):
 
     class Config:
         orm_mode = True
-        json_encoders = {
-            ObjectId: str
-        }
+        json_encoders = {ObjectId: str}
+
 
 class AssistantMongoModel:
-    def __init__(self, user_id: str, name: str, instructions: str, tone: str, website_data: dict):
-        self.user_id = user_id  
+    def __init__(
+        self, user_id: str, assistant_id: str, name: str, instructions: str, tone: str, website_data: dict
+    ):
+        self.user_id = user_id
+        self.assistant_id = assistant_id
         self.name = name
         self.instructions = instructions
         self.tone = tone
@@ -54,6 +61,5 @@ class AssistantMongoModel:
         """Update the assistant's configuration."""
         assistants_collection = db.assistants
         assistants_collection.update_one(
-            {"_id": ObjectId(assistant_id)},
-            {"$set": new_config}
+            {"_id": ObjectId(assistant_id)}, {"$set": new_config}
         )
