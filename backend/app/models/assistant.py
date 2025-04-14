@@ -1,4 +1,4 @@
-# models/assistant.py
+
 from pydantic import BaseModel
 from typing import Optional, Dict
 from bson import ObjectId
@@ -8,12 +8,12 @@ from app.database import db
 class AssistantConfig(BaseModel):
     name: str
     instructions: str
-    tone: Optional[str] = "neutral"  # E.g., "formal", "casual", etc.
+    tone: Optional[str] = "neutral"  
     website_data: Optional[Dict] = {}
 
 class Assistant(BaseModel):
     id: Optional[str] = None
-    user_id: str  # Add user_id to link the assistant to a user
+    user_id: str  
     name: str
     instructions: str
     tone: str
@@ -27,10 +27,9 @@ class Assistant(BaseModel):
             ObjectId: str
         }
 
-# MongoDB Model for Assistant
 class AssistantMongoModel:
     def __init__(self, user_id: str, name: str, instructions: str, tone: str, website_data: dict):
-        self.user_id = user_id  # Link assistant to user
+        self.user_id = user_id  
         self.name = name
         self.instructions = instructions
         self.tone = tone

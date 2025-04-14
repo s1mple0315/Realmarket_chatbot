@@ -10,7 +10,7 @@ def get_user_id_from_token(request: Request):
         raise HTTPException(status_code=401, detail="Authorization header missing")
     
     try:
-        token = token.split("Bearer ")[1]  # Extract token from 'Bearer <token>'
+        token = token.split("Bearer ")[1]  
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("sub")
         if user_id is None:

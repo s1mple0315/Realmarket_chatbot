@@ -1,29 +1,64 @@
-# api/v1/assistants.py
+
 from fastapi import APIRouter, HTTPException, Depends
-from app.dependencies import get_user_id_from_token
-from app.models.assistant import Assistant, AssistantConfig
-from app.services.assitant_service import create_assistant, get_assistant_by_id, update_assistant_config
+import openai
+
+from app.models.assistant import Assistant, AssistantConfig, AssistantMongoModel
+from fastapi import Request
+
+from app.services.assitant_service import add_message, create_assistant, get_assistant, run_chat, start_new_chat
 
 router = APIRouter()
 
-# Create a new assistant for a user
 @router.post("/", response_model=Assistant)
-async def create_new_assistant(assistant_config: AssistantConfig, user_id: str = Depends(get_user_id_from_token)):
-    new_assistant = await create_assistant(assistant_config, user_id)
-    return new_assistant
+async def create_new_assistant(assistant_config: AssistantConfig, request: Request):
+    user_id = request.state.user_id
+    
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+    
+    assistant = create_assistant(
+        client=openai,  
+        name=assistant_config.name,
+        description=assistant_config.description,
+        instructions=assistant_config.instructions,
+        tools=assistant_config.tools,
+    )
+    
+    if isinstance(assistant, str): 
+        raise HTTPException(status_code=500, detail=assistant)
+    
+    assistant_data = AssistantMongoModel(
+        user_id=user_id,
+        assistant_id=assistant['id'],
+        name=assistant_config.name,
+        instructions=assistant_config.instructions,
+        tone=assistant_config.tone,
+        website_data=assistant_config.website_data,
+    )
+    assistant_data.save()
+    
+    return assistant_data
 
-# Update an assistant's configuration
-@router.put("/{assistant_id}", response_model=Assistant)
-async def update_assistant(assistant_id: str, assistant_config: AssistantConfig):
-    updated_assistant = await update_assistant_config(assistant_id, assistant_config.dict())
-    if not updated_assistant:
-        raise HTTPException(status_code=404, detail="Assistant not found")
-    return updated_assistant
-
-# Get an assistant by ID
-@router.get("/{assistant_id}", response_model=Assistant)
-async def get_assistant(assistant_id: str):
-    assistant = await get_assistant_by_id(assistant_id)
-    if not assistant:
-        raise HTTPException(status_code=404, detail="Assistant not found")
-    return assistant
+@router.post("/{assistant_id}/query", response_model=str)
+async def query_assistant_route(assistant_id: str, user_query: str):
+    assistant = get_assistant(client=openai, assistant_id=assistant_id)
+    
+    if isinstance(assistant, str):  
+        raise HTTPException(status_code=404, detail=assistant)
+    
+    thread = start_new_chat(client=openai)
+    
+    if isinstance(thread, str): 
+        raise HTTPException(status_code=500, detail=thread)
+    
+    message = add_message(client=openai, thread=thread, content=user_query)
+    
+    if isinstance(message, str):  
+        raise HTTPException(status_code=500, detail=message)
+    
+    run = run_chat(client=openai, thread=thread, assistant=assistant)
+    
+    if isinstance(run, str):  
+        raise HTTPException(status_code=500, detail=run)
+    
+    return {"response": run["choices"][0]["message"]["content"]}
