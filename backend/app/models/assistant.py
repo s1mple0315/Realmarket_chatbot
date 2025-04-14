@@ -13,6 +13,7 @@ class AssistantConfig(BaseModel):
 
 class Assistant(BaseModel):
     id: Optional[str] = None
+    user_id: str  # Add user_id to link the assistant to a user
     name: str
     instructions: str
     tone: str
@@ -26,8 +27,10 @@ class Assistant(BaseModel):
             ObjectId: str
         }
 
+# MongoDB Model for Assistant
 class AssistantMongoModel:
-    def __init__(self, name: str, instructions: str, tone: str, website_data: dict):
+    def __init__(self, user_id: str, name: str, instructions: str, tone: str, website_data: dict):
+        self.user_id = user_id  # Link assistant to user
         self.name = name
         self.instructions = instructions
         self.tone = tone
@@ -40,13 +43,13 @@ class AssistantMongoModel:
         assistants_collection = db.assistants
         assistant_data = self.__dict__
         return assistants_collection.insert_one(assistant_data)
-    
+
     @staticmethod
     def get_assistant_by_id(assistant_id: str):
         """Fetch an assistant by ID."""
         assistants_collection = db.assistants
         return assistants_collection.find_one({"_id": ObjectId(assistant_id)})
-    
+
     @staticmethod
     def update_assistant(assistant_id: str, new_config: dict):
         """Update the assistant's configuration."""

@@ -1,14 +1,15 @@
 # api/v1/assistants.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from app.dependencies import get_user_id_from_token
 from app.models.assistant import Assistant, AssistantConfig
-from app.services.assitant_service import create_assistant, update_assistant_config, get_assistant_by_id
+from app.services.assitant_service import create_assistant, get_assistant_by_id, update_assistant_config
 
 router = APIRouter()
 
-# Create a new assistant
+# Create a new assistant for a user
 @router.post("/", response_model=Assistant)
-async def create_new_assistant(assistant_config: AssistantConfig):
-    new_assistant = await create_assistant(assistant_config)
+async def create_new_assistant(assistant_config: AssistantConfig, user_id: str = Depends(get_user_id_from_token)):
+    new_assistant = await create_assistant(assistant_config, user_id)
     return new_assistant
 
 # Update an assistant's configuration
