@@ -1,12 +1,12 @@
 # services/auth_service.py
-from passlib.context import CryptContext
-from jose import JWTError, jwt
 from datetime import datetime, timedelta
+from passlib.context import CryptContext
+from jose import JWTError, jwt 
 from typing import Optional
 from app.services.user_service import get_user_by_username  # Import from user_service
 import os
-from app.database import db  # Import the database connection
 from app.models.user import User, UserMongoModel  # Import the UserMongoModel
+from app.database import db 
 
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key")
 ALGORITHM = "HS256"
@@ -51,6 +51,7 @@ async def register_user(user: User) -> Optional[dict]:
         "email": user.email,
         "name": user.name,
         "password": hashed_password,
+        "created_at": datetime.utcnow(),
     }
     user_model = UserMongoModel(**user_data)
     db.users.insert_one(user_model.__dict__)  # Save user data to MongoDB

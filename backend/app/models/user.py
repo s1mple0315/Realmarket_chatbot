@@ -3,17 +3,17 @@ from pydantic import BaseModel, EmailStr
 from bson import ObjectId
 from typing import List, Optional
 import datetime
+from app.database import db
 
-# MongoDB Model for User
 class UserMongoModel:
     def __init__(
-        self, name: str, email: EmailStr, password: str, assistants: Optional[List[str]] = None
+        self, name: str, email: EmailStr, password: str, assistants: Optional[List[str]] = None, created_at: Optional[datetime.datetime] = None
     ):
         self.name = name
         self.email = email
-        self.password = password  # Store password (hashed in registration process)
+        self.password = password
         self.assistants = assistants or []
-        self.created_at = datetime.datetime.utcnow()
+        self.created_at = created_at or datetime.datetime.utcnow()  # Ensure created_at is set here
 
     def save(self):
         """Save the user to the database."""
@@ -40,4 +40,3 @@ class User(BaseModel):
         json_encoders = {ObjectId: str}
         # Exclude password from responses
         fields = {'password': {'exclude': True}}
-
