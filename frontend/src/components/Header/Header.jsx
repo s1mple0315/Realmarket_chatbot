@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import AppLogo from "../../icons/AppLogo";
 import UserIcon from "../../icons/UserIcon";
 
-import styles from ".Header.module.css";
+import styles from "./Header.module.css";
 
 const Header = () => {
   return (
@@ -15,19 +15,13 @@ const Header = () => {
       <nav className={styles.nav}>
         <ul className={`${styles.navList} d-flex`}>
           <li>
-            <NavLink activeClassName="active" to="/">
-              Продукты
-            </NavLink>
+            <NavLink to="/">Продукты</NavLink>
           </li>
           <li>
-            <NavLink activeClassName="active" to="/">
-              Тарифы
-            </NavLink>
+            <NavLink to="/">Тарифы</NavLink>
           </li>
           <li>
-            <NavLink activeClassName="active" to="/">
-              Кейсы
-            </NavLink>
+            <NavLink to="/">Кейсы</NavLink>
           </li>
         </ul>
       </nav>

@@ -1,9 +1,9 @@
 import React from "react";
-import styled from "styled-components";
+import styles from "./Loader.module.css"; // Import the CSS Module
 
 const Loader = () => {
   return (
-    <StyledWrapper>
+    <div className={styles.loaderWrapper}>
       <div>
         <svg height={0} width={0}>
           <defs>
@@ -31,39 +31,25 @@ const Loader = () => {
         </svg>
         <svg height={180} width={320} viewBox="0 0 320 180">
           <g filter="url(#goo)">
-            <circle cy={90} cx={160} r={24} fill="#275EFE" className="circle" />
             <circle
               cy={90}
               cx={160}
               r={24}
               fill="#275EFE"
-              className="circle right"
+              className={`${styles.circle}`}
+            />
+            <circle
+              cy={90}
+              cx={160}
+              r={24}
+              fill="#275EFE"
+              className={`${styles.circle} ${styles.right}`}
             />
           </g>
         </svg>
       </div>
-    </StyledWrapper>
+    </div>
   );
 };
-
-const StyledWrapper = styled.div`
-  .circle {
-    animation: move571 4s linear infinite;
-  }
-
-  .circle.right {
-    animation-direction: reverse;
-  }
-
-  @keyframes move571 {
-    25% {
-      transform: translateX(-32px);
-    }
-
-    75% {
-      transform: translateX(32px);
-    }
-  }
-`;
 
 export default Loader;
