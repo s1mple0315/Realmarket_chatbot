@@ -1,0 +1,48 @@
+.header {
+  margin: 41px 38px;
+}
+
+.navlist {
+  gap: 75px;
+}
+
+.navlist > li > a {
+  font-family: var(--unbounded-font);
+  font-size: 16px;
+  color: var(--font-color-primary);
+  text-decoration: none;
+}
+
+.navlist > li > a:hover {
+  color: var(--font-color-secondary);
+}
+
+.navlist > li > a.active {
+  color: var(--font-color-secondary);
+}
+
+.authButtons {
+  gap: 45px;
+}
+
+.authButtons:nth-child(1) {
+  font-family: var(--unbounded-font);
+  font-size: 16px;
+}
+
+.authButtons:nth-child(1) > svg {
+  margin-right: 5px;
+}
+
+.authButtons:nth-child(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--font-color-secondary);
+  font-family: var(--montserrat-font);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 25px 40px;
+  border-radius: 50px;
+  border: 1px solid var(--linear-gradient-border);
+}
