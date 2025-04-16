@@ -40,6 +40,7 @@
   align-items: center;
   background-color: var(--font-color-secondary);
   font-family: var(--montserrat-font);
+  color: var(--font-color-white);
   font-size: 16px;
   font-weight: 500;
   padding: 25px 40px;
