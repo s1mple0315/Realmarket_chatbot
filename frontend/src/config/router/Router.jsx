@@ -7,10 +7,25 @@ import AuthPage from "../../pages/AuthPage/AuthPage";
 import HomePage from "../../pages/HomePage/HomePage";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 
-// const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
 const UserDashboard = lazy(() =>
   import("../../pages/UserDashboard/UserDashboard")
 );
+const ApplicationPage = lazy(() =>
+  import("../../pages/UserDashboardPages/ApplicationsPage/ApplicationPage")
+);
+const DialogsPage = lazy(() =>
+  import("../../pages/UserDashboardPages/DialogsPage/DialogsPage")
+);
+const IntegrationPage = lazy(() =>
+  import("../../pages/UserDashboardPages/IntegrationPage/IntegrationPage")
+);
+const MyRealbotPage = lazy(() =>
+  import("../../pages/UserDashboardPages/MyRealbotPage/MyRealbotPage")
+);
+const StatsPage = lazy(() =>
+  import("../../pages/UserDashboardPages/StatsPage/StatsPage")
+);
+
 
 const AppRouter = () => {
   return (
@@ -27,7 +42,19 @@ const AppRouter = () => {
                   <UserDashboard />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route path="/dashboard/my-realbot" element={<MyRealbotPage />} />
+              <Route
+                path="/dashboard/applications"
+                element={<ApplicationPage />}
+              />
+              <Route
+                path="/dashboard/integration"
+                element={<IntegrationPage />}
+              />
+              <Route path="/dashboard/dialogs" element={<DialogsPage />} />
+              <Route path="/dashboard/stats" element={<StatsPage />} />
+            </Route>
           </Routes>
         </Suspense>
       </Router>

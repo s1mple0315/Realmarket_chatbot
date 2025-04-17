@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    // Initialize authState from localStorage
+    
     const storedToken = localStorage.getItem("access_token");
     const storedTokenType = localStorage.getItem("token_type");
 
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    console.log("Updated authState:", authState); // Logs whenever authState changes
+    console.log("Updated authState:", authState); 
   }, [authState]);
 
   const login = ({ access_token, token_type }) => {

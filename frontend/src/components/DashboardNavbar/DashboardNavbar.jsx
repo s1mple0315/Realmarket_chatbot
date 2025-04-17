@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 import StatsIcon from "../../icons/StatsIcon";
 import styles from "./DashboardNavbar.module.css";
 
@@ -10,23 +12,24 @@ const DashboardNavbar = () => {
         ></div>
         <div>
           <h3>Sberbank Marketing</h3>
-          <button>Тариф: Realboss</button>
+          <span>Тариф: Realboss</span>
         </div>
         <ul>
           <li>
+            <NavLink ></NavLink>
             <StatsIcon /> Сводка
           </li>
           <li>
-            <StatsIcon /> Сводка
+            <StatsIcon /> Диалоги
           </li>
           <li>
-            <StatsIcon /> Сводка
+            <StatsIcon /> Интеграция
           </li>
           <li>
-            <StatsIcon /> Сводка
+            <StatsIcon /> Заявки
           </li>
           <li>
-            <StatsIcon /> Сводка
+            <StatsIcon /> Мой RealBot
           </li>
         </ul>
         <div>

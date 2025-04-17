@@ -7,7 +7,7 @@ const AuthPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState(null);
-  const { login, authState } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -45,20 +45,12 @@ const AuthPage = () => {
         },
       });
 
-      // console.log(response.data);
-
       const { access_token, token_type } = response.data;
 
       if (access_token) {
         console.log(isLoginMode ? "Logged in!" : "Registered!");
 
-        // console.log("Before login:", authState);
-
         login({ access_token, token_type });
-
-        // console.log("After login:", authState);
-
-        // console.log("Navigating to /dashboard...");
         navigate("/dashboard");
       } else {
         setError("An error occurred while processing the response.");
