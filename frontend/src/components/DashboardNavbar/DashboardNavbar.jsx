@@ -10,26 +10,50 @@ const DashboardNavbar = () => {
         <div
           className={`${styles.avatar} d-flex justify-content-between align-items-top`}
         ></div>
-        <div>
+        <div className={`${styles.userInfo} d-flex flex-column`}>
           <h3>Sberbank Marketing</h3>
           <span>Тариф: Realboss</span>
         </div>
-        <ul>
+        <ul className={styles.navList}>
           <li>
-            <NavLink ></NavLink>
-            <StatsIcon /> Сводка
+            <NavLink
+              to="/dashboard/stats"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+            >
+              <StatsIcon /> Сводка
+            </NavLink>
           </li>
           <li>
-            <StatsIcon /> Диалоги
+            <NavLink
+              to="/dashboard/dialogs"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+            >
+              <StatsIcon /> Диалоги
+            </NavLink>
           </li>
           <li>
-            <StatsIcon /> Интеграция
+            <NavLink
+              to="/dashboard/integration"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+            >
+              <StatsIcon /> Интеграция
+            </NavLink>
           </li>
           <li>
-            <StatsIcon /> Заявки
+            <NavLink
+              to="/dashboard/applications"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+            >
+              <StatsIcon /> Заявки
+            </NavLink>
           </li>
           <li>
-            <StatsIcon /> Мой RealBot
+            <NavLink
+              to="/dashboard/my-realbot"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+            >
+              <StatsIcon /> Мой RealBot
+            </NavLink>
           </li>
         </ul>
         <div>
