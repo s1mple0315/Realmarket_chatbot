@@ -5,6 +5,7 @@ import { lazy, Suspense } from "react";
 import Loader from "../../components/Loader/Loader";
 import AuthPage from "../../pages/AuthPage/AuthPage";
 import HomePage from "../../pages/HomePage/HomePage";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 
 // const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
 const UserDashboard = lazy(() =>
@@ -19,7 +20,14 @@ const AppRouter = () => {
           <Routes>
             <Route path="/" exact element={<HomePage />} />
             <Route path="/login" element={<AuthPage />} />
-            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <UserDashboard />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Suspense>
       </Router>

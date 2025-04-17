@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../../config/context/AuthContext";
 
 const AuthPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState(null);
+  const { login, authState } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const toggleMode = () => {
     setIsLoginMode((prevMode) => !prevMode);
@@ -12,7 +17,11 @@ const AuthPage = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -24,15 +33,38 @@ const AuthPage = () => {
         ? "http://localhost:8000/api/v1/auth/login"
         : "http://localhost:8000/api/v1/auth/register";
 
-      const response = await axios.post(url, formData);
+      const requestBody = new URLSearchParams({
+        grant_type: "password",
+        username: formData.username,
+        password: formData.password,
+      });
 
-      if (response.data.success) {
+      const response = await axios.post(url, requestBody, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      // console.log(response.data);
+
+      const { access_token, token_type } = response.data;
+
+      if (access_token) {
         console.log(isLoginMode ? "Logged in!" : "Registered!");
+
+        // console.log("Before login:", authState);
+
+        login({ access_token, token_type });
+
+        // console.log("After login:", authState);
+
+        // console.log("Navigating to /dashboard...");
+        navigate("/dashboard");
       } else {
-        setError(response.data.message || "An error occurred.");
+        setError("An error occurred while processing the response.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong.");
+      setError("Something went wrong.");
     }
   };
 
@@ -41,11 +73,11 @@ const AuthPage = () => {
       <h2>{isLoginMode ? "Login" : "Register"}</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:</label>
+          <label>Username:</label>
           <input
-            type="email"
-            name="email"
-            value={formData.email}
+            type="text"
+            name="username"
+            value={formData.username}
             onChange={handleChange}
             required
           />

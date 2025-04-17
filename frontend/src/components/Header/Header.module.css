@@ -28,17 +28,18 @@
 
 .authButtons {
   display: flex;
+  align-items: center;
   gap: 45px;
 }
 
-.authButtons > :nth-child(1) {
+.authButtons > a > button {
   font-family: var(--unbounded-font);
   font-size: 16px;
   background-color: transparent;
   border: none;
 }
 
-.authButtons > :nth-child(1) > svg {
+.authButtons > a > button > svg {
   margin-right: 5px;
 }
 

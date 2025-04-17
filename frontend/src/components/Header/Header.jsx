@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import AppLogo from "../../icons/AppLogo";
 import UserIcon from "../../icons/UserIcon";
 
@@ -26,9 +26,11 @@ const Header = () => {
         </ul>
       </nav>
       <div className={`${styles.authButtons} d-flex`}>
-        <button>
-          <UserIcon /> Войти
-        </button>
+        <Link to="/login" className={styles.loginButton}>
+          <button>
+            <UserIcon /> Войти
+          </button>
+        </Link>
         <button>Попробовать бесплатно</button>
       </div>
     </header>
