@@ -1,0 +1,37 @@
+.dashboardNavbarWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 345px;
+  height: 100vh;
+  margin: 38px 31px 38px 38px;
+  padding: 38px 38px 35px 40px;
+  backdrop-filter: blur(39.7px);
+  background: var(--gradient-background);
+  border-radius: 25px;
+  overflow: hidden;
+}
+
+.dashboardNavbarWrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    #3aadff 0deg,
+    #454ded 83.08deg,
+    #6945ed 167.88deg,
+    #a01cba 275.19deg,
+    #3aadff 360deg
+  );
+  padding: 1px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
