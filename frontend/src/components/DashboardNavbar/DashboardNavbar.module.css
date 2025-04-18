@@ -23,17 +23,70 @@
   border-radius: inherit;
   background: conic-gradient(
     from 180deg at 50% 50%,
-    #3aadff 0deg,
-    #454ded 83.08deg,
-    #6945ed 167.88deg,
-    #a01cba 275.19deg,
-    #3aadff 360deg
+    rgba(124, 197, 255, 0.6) 0deg,
+    rgba(137, 143, 244, 0.6) 83.08deg,
+    rgba(160, 134, 244, 0.6) 167.88deg,
+    rgba(202, 108, 209, 0.6) 275.19deg,
+    rgba(124, 197, 255, 0.6) 360deg
   );
   padding: 1px;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+}
+
+.dashboardNavbar {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.avatar {
+  margin-bottom: 13px;
+}
+
+.avatarLogo {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    rgba(124, 197, 255, 0.6) 0deg,
+    rgba(137, 143, 244, 0.6) 83.08deg,
+    rgba(160, 134, 244, 0.6) 167.88deg,
+    rgba(202, 108, 209, 0.6) 275.19deg,
+    rgba(124, 197, 255, 0.6) 360deg
+  );
+  border-radius: 25px;
+  overflow: hidden;
+}
+
+.avatarLogo > * {
+  background-color: #fff;
+  border-radius: 23px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatarSettings {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.avatarSettings div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--font-color-secondary);
+  padding: 10px;
+  border-radius: 12px;
 }
 
 .userInfo {
@@ -72,6 +125,8 @@
 }
 
 .navList > li > a {
+  display: flex;
+  align-items: center;
   text-decoration: none;
   color: var(--font-color-primary);
 }
@@ -80,3 +135,31 @@
   margin-right: 20px;
 }
 
+.navList > li > a.active {
+  color: var(--font-color-secondary);
+}
+
+.navList > li > a:hover {
+  color: var(--font-color-secondary);
+}
+
+.support {
+  font-family: var(--montserrat-font);
+  margin-top: auto;
+}
+
+.support button {
+  border: 1px solid var(--font-color-secondary);
+  border-radius: 15px;
+  background-color: transparent;
+  color: var(--font-color-secondary);
+}
+
+.supportButton {
+  padding: 19.5px 53.5px;
+  font-size: 15px;
+}
+
+.logoutButton {
+  padding: 13.5px;
+}
