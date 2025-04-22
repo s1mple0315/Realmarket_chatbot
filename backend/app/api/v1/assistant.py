@@ -16,6 +16,7 @@ from app.services.assitant_service import (
 )
 from app.services.auth_service import verify_token
 from app.database import db
+from loguru import logger
 
 router = APIRouter()
 
@@ -61,6 +62,7 @@ async def create_new_assistant(
 async def query_assistant_route(
     assistant_id: str, user_query: str, user_id: str = Depends(verify_token)
 ):
+    logger.info(f"Query for assistant {assistant_id} by user {user_id}")
     user_query = bleach.clean(user_query)
     assistant = get_assistant(client=openai, assistant_id=assistant_id)
     if isinstance(assistant, str):
