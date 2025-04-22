@@ -2,6 +2,9 @@ import { NavLink } from "react-router-dom";
 
 import StatsIcon from "../../icons/StatsIcon";
 import styles from "./DashboardNavbar.module.css";
+import LogoutIcon from "../../icons/LogoutIcon";
+import BellIcon from "../../icons/BellIcon";
+import SettingsIcon from "../../icons/SettingsIcon";
 
 const DashboardNavbar = () => {
   return (
@@ -9,7 +12,19 @@ const DashboardNavbar = () => {
       <nav className={styles.dashboardNavbar}>
         <div
           className={`${styles.avatar} d-flex justify-content-between align-items-top`}
-        ></div>
+        >
+          <div className={styles.avatarLogo}>
+            <img src="/assets/images/Dashboard/Logo/sber.png" alt="User Logo" />
+          </div>
+          <div className={styles.avatarSettings}>
+            <div className={styles.avatarSettingsNews}>
+              <BellIcon />
+            </div>
+            <div>
+              <SettingsIcon />
+            </div>
+          </div>
+        </div>
         <div className={`${styles.userInfo} d-flex flex-column`}>
           <h3>Sberbank Marketing</h3>
           <span>Тариф: Realboss</span>
@@ -56,9 +71,11 @@ const DashboardNavbar = () => {
             </NavLink>
           </li>
         </ul>
-        <div>
-          <button>Поддержка</button>
-          <button>Выйти</button>
+        <div className={`${styles.support} d-flex align-items-center gap-2`}>
+          <button className={styles.supportButton}>Поддержка</button>
+          <button className={styles.logoutButton}>
+            <LogoutIcon />
+          </button>
         </div>
       </nav>
     </div>
