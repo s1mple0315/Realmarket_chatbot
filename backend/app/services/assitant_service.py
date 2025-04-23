@@ -1,14 +1,17 @@
+import time
 from dotenv import load_dotenv
 import openai
 import os
 from app.models.assistant import AssistantConfig
 from app.models.assistant import AssistantMongoModel
 from app.database import db
+from app.config import redis_client
 
 load_dotenv()
 
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 
 def create_assistant(
@@ -78,12 +81,33 @@ def get_messages_in_chat(client, thread):
 
 
 def run_chat(client, thread, assistant):
-    """Run the assistant with the current thread"""
+    """Run the assistant with the current thread and wait for completion."""
     try:
+        cache_key = f"chat:{thread.id}:{assistant.id}"
+        cached_response = redis_client.get(cache_key)
+        if cached_response:
+            return cached_response.decode("utf-8")
+
         run = client.beta.threads.runs.create(
             thread_id=thread.id,
             assistant_id=assistant.id,
         )
-        return run
+        while True:
+            run_status = client.beta.threads.runs.retrieve(
+                thread_id=thread.id, run_id=run.id
+            )
+            if run_status.status in ["completed", "failed", "cancelled"]:
+                break
+            time.sleep(1)
+        if run_status.status != "completed":
+            return f"Run failed with status: {run_status.status}"
+
+        messages = client.beta.threads.messages.list(thread_id=thread.id)
+        for message in messages.data:
+            if message.role == "assistant":
+                response = message.content[0].text.value
+                redis_client.setex(cache_key, 3600, response)
+                return response
+        return "No assistant response found"
     except Exception as e:
         return f"Error occurred while running chat: {str(e)}"

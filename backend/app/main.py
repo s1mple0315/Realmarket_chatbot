@@ -1,11 +1,20 @@
 from fastapi import FastAPI
+from fastapi_limiter import FastAPILimiter
+import redis
 from app.api.v1 import router as api_router
 from app.middleware import AddUserIDToRequest
 from fastapi.middleware.cors import CORSMiddleware
+from app.config import redis_client
 
 app = FastAPI()
 
 app.add_middleware(AddUserIDToRequest)
+
+
+@app.on_event("startup")
+async def startup():
+    await FastAPILimiter.init(redis_client)
+
 
 origins = [
     "http://localhost",
