@@ -1,3 +1,10 @@
-.statsPage{
-    background-color: red;
+.dashboard {
+  display: flex;
+}
+.title {
+  font-family: var(--unbounded-font);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--font-color-primary);
+  margin: 0 0 20px;
 }

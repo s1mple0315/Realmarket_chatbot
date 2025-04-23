@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
 
 import StatsIcon from "../../icons/StatsIcon";
-import styles from "./DashboardNavbar.module.css";
 import LogoutIcon from "../../icons/LogoutIcon";
 import BellIcon from "../../icons/BellIcon";
 import SettingsIcon from "../../icons/SettingsIcon";
+
+import styles from "./DashboardNavbar.module.css";
 
 const DashboardNavbar = () => {
   return (

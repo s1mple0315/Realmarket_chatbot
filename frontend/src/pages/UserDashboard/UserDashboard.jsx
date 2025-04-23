@@ -4,8 +4,10 @@ import styles from "./UserDashboard.module.css";
 
 const UserDashboard = () => {
   return (
-    <div className={`${styles.userDashboardWrapper} d-flex `}>
-      <DashboardNavbar />
+    <div className={`${styles.userDashboardWrapper} d-flex`}>
+      <div className={styles.userDashboardNavbar}>
+        <DashboardNavbar />
+      </div>
 
       <div className={styles.userDashboardContent}>
         <Outlet />

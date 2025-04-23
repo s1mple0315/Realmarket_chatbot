@@ -1,0 +1,93 @@
+.controlsWrapper {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.tabsContainer {
+  padding: 16px 20px;
+  height: 54.5px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  background: var(--gradient-background);
+  backdrop-filter: blur(39.7px);
+  border-radius: 15px;
+}
+
+.tabsContainer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    rgba(124, 197, 255, 0.6) 0deg,
+    rgba(137, 143, 244, 0.6) 83.08deg,
+    rgba(160, 134, 244, 0.6) 167.88deg,
+    rgba(202, 108, 209, 0.6) 275.19deg,
+    rgba(124, 197, 255, 0.6) 360deg
+  );
+  padding: 1px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.tab {
+  font-family: var(--montserrat-font);
+  font-size: 14px;
+  color: var(--font-color-primary);
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.tab.active {
+  padding: 8px 20px;
+  background-color: var(--font-color-secondary);
+  color: var(--font-color-white);
+}
+
+.timeContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  font-family: var(--montserrat-font);
+  font-size: 15px;
+  background: var(--gradient-background);
+  backdrop-filter: blur(39.7px);
+  border-radius: 15px;
+}
+
+.timeContainer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    rgba(124, 197, 255, 0.6) 0deg,
+    rgba(137, 143, 244, 0.6) 83.08deg,
+    rgba(160, 134, 244, 0.6) 167.88deg,
+    rgba(202, 108, 209, 0.6) 275.19deg,
+    rgba(124, 197, 255, 0.6) 360deg
+  );
+  padding: 1px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
