@@ -1,6 +1,6 @@
-from pymongo import MongoClient
+import os
+from motor.motor_asyncio import AsyncIOMotorClient
 
-client = MongoClient("mongodb://localhost:27017/")
-db = client.chatbot_db  
-
-
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongodb:27017/chatbot_db")
+client = AsyncIOMotorClient(MONGO_URI)
+db = client.get_database()
