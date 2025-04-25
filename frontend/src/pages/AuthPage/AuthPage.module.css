@@ -1,4 +1,5 @@
 .authContainer {
+  padding: 150px 0;
   flex: 1;
   background-image: url("/assets/images/Background/waves.png");
   background-position: center;
