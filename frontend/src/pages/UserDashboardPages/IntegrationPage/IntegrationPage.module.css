@@ -1,0 +1,49 @@
+.integrationPage {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.integrationPageTitle > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 38px;
+}
+
+.integrationPageTitleButton button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 40px;
+  gap: 10px;
+  isolation: isolate;
+  background: linear-gradient(0deg, #6945ed, #6945ed), #ffffff;
+  border-radius: 50px;
+  border: none;
+
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;
+}
+
+.integrationPageText > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-size: 18px;
+  line-height: 22px;
+  margin: 0;
+}
+
+.integrationPageText > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 14px;
+  line-height: 21px;
+  margin: 0;
+}
