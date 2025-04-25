@@ -2,6 +2,10 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../config/context/AuthContext";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+
+import styles from "./AuthPage.module.css";
 
 const AuthPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -61,35 +65,39 @@ const AuthPage = () => {
   };
 
   return (
-    <div>
-      <h2>{isLoginMode ? "Login" : "Register"}</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit">{isLoginMode ? "Login" : "Register"}</button>
-      </form>
-      <button onClick={toggleMode}>
-        Switch to {isLoginMode ? "Register" : "Login"}
-      </button>
+    <div className={`${styles.pageContainer} d-flex flex-column`}>
+      <Header />
+      <div
+        className={`${styles.authContainer} d-flex flex-column justify-content-center align-items-center`}
+      >
+        <h2>{isLoginMode ? "Вход в кабинет" : "Регистрация"}</h2>
+        <form onSubmit={handleSubmit} className={styles.authForm}>
+          <div>
+            <input
+              type="text"
+              name="username"
+              placeholder="+7 (___) ___-__-__"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <button type="submit">
+            {isLoginMode ? "Войти в личный кабинет" : "Register"}
+          </button>
+        </form>
+      </div>
+      <Footer />
     </div>
   );
 };

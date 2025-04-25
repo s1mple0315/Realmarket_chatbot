@@ -38,6 +38,17 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    develop:
+      watch:
+        - action: restart
+          target: /app/src
+          path: ./frontend/src
+        - action: restart
+          target: /app/public
+          path: ./frontend/public
+        - action: rebuild
+          target: /app/package.json
+          path: ./frontend/package.json
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:4000 || exit 1"]
       interval: 30s

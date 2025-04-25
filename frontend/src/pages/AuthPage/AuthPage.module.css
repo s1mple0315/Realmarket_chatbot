@@ -1,0 +1,96 @@
+.authContainer {
+  flex: 1;
+  background-image: url("/assets/images/Background/waves.png");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.authContainer > h2 {
+  font-family: var(--unbounded-font);
+  font-size: 48px;
+  font-weight: 500;
+}
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.authForm {
+  position: relative;
+  padding: 40px;
+  border-radius: 25px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(255, 255, 255, 0.2) 5.05%,
+    rgba(199, 189, 255, 0.2) 107.06%
+  );
+  backdrop-filter: blur(15px);
+  width: 100%;
+  max-width: 595px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.authForm::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  padding: 2px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(105, 69, 237, 0.8),
+    rgba(199, 189, 255, 0.8)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: 0;
+}
+
+.authForm > div {
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 30px;
+
+  border: 1px solid rgba(105, 69, 237, 0.5);
+}
+
+.authForm > div > input {
+  font-family: var(--montserrat-font);
+  font-size: 16px;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  line-height: 150%;
+  color: #464646;
+  order: 0;
+  flex-grow: 0;
+}
+
+.authForm > button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 40px;
+  gap: 10px;
+  isolation: isolate;
+  width: 515px;
+  height: 70px;
+  background: linear-gradient(0deg, #6945ed, #6945ed), #ffffff;
+  border-radius: 50px;
+  align-self: stretch;
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #ffffff;
+  border: none;
+}
