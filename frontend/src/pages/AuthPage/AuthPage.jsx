@@ -8,17 +8,11 @@ import Header from "../../components/Header/Header";
 import styles from "./AuthPage.module.css";
 
 const AuthPage = () => {
-  const [isLoginMode, setIsLoginMode] = useState(true);
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState(null);
   const { login } = useContext(AuthContext);
 
   const navigate = useNavigate();
-
-  const toggleMode = () => {
-    setIsLoginMode((prevMode) => !prevMode);
-    setError(null);
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,9 +27,7 @@ const AuthPage = () => {
     setError(null);
 
     try {
-      const url = isLoginMode
-        ? "http://localhost:8000/api/v1/auth/login"
-        : "http://localhost:8000/api/v1/auth/register";
+      const url = "http://localhost:8000/api/v1/auth/login";
 
       const requestBody = new URLSearchParams({
         grant_type: "password",
@@ -52,15 +44,18 @@ const AuthPage = () => {
       const { access_token, token_type } = response.data;
 
       if (access_token) {
-        console.log(isLoginMode ? "Logged in!" : "Registered!");
-
+        console.log("Logged in!");
         login({ access_token, token_type });
         navigate("/dashboard");
       } else {
-        setError("An error occurred while processing the response.");
+        setError("No access token received from the server.");
+        console.log("Response data:", response.data);
       }
     } catch (err) {
-      setError("Something went wrong.");
+      console.error("Login error:", err.response || err.message);
+      setError(
+        err.response?.data?.detail || "Failed to login. Please try again."
+      );
     }
   };
 
@@ -70,7 +65,7 @@ const AuthPage = () => {
       <div
         className={`${styles.authContainer} d-flex flex-column justify-content-center align-items-center`}
       >
-        <h2>{isLoginMode ? "Вход в кабинет" : "Регистрация"}</h2>
+        <h2>Вход в кабинет</h2>
         <form onSubmit={handleSubmit} className={styles.authForm}>
           <div>
             <input
@@ -92,9 +87,12 @@ const AuthPage = () => {
             />
           </div>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <button type="submit">
-            {isLoginMode ? "Войти в личный кабинет" : "Register"}
-          </button>
+          <button type="submit">Войти в личный кабинет</button>
+          <img
+            src="assets/images/Background/cube.png"
+            className={styles.backgroundCube}
+            alt="background-cube image"
+          />
         </form>
       </div>
       <Footer />

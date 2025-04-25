@@ -20,19 +20,25 @@
 
 .authForm {
   position: relative;
+  z-index: 1;
   padding: 40px;
   border-radius: 25px;
   background: linear-gradient(
     232.68deg,
-    rgba(255, 255, 255, 0.2) 5.05%,
-    rgba(199, 189, 255, 0.2) 107.06%
+    rgba(255, 255, 255, 0.1) 5.05%,
+    rgba(199, 189, 255, 0.1) 107.06%
   );
-  backdrop-filter: blur(15px);
   width: 100%;
   max-width: 595px;
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+@supports not (backdrop-filter: blur(39px)) {
+  .authForm {
+    background: rgba(255, 255, 255, 0.3);
+  }
 }
 
 .authForm::before {
@@ -51,6 +57,7 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   z-index: 0;
+  backdrop-filter: blur(16px);
 }
 
 .authForm > div {
@@ -60,6 +67,22 @@
   padding: 25px 30px;
 
   border: 1px solid rgba(105, 69, 237, 0.5);
+}
+
+.backgroundCube {
+  position: absolute;
+  bottom: -15px;
+  right: -15px;
+  width: 100px;
+  height: 100px;
+  transform: perspective(500px) rotate(15deg);
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1)) brightness(1.1);
+  z-index: -2;
+  transition: transform 0.3s ease;
+}
+
+.backgroundCube:hover {
+  transform: perspective(500px) rotate(20deg) scale(1.1);
 }
 
 .authForm > div > input {
