@@ -1,0 +1,42 @@
+.dialogItem {
+  padding: 15px 30px;
+  border-bottom: 1px solid #efefef;
+}
+
+.dialogItemStatus > span {
+  text-align: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  color: var(--font-color-secondary);
+  margin-right: 20px;
+}
+
+.dialogItemText > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.dialogItemText > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.dialogItemTime > svg {
+  margin-right: 5px;
+}
+
+.dialogItemTime > p {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #707991;
+}
