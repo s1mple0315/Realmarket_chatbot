@@ -1,0 +1,38 @@
+.applicationItem {
+  padding: 15px 30px;
+  border-bottom: 1px solid #efefef;
+}
+
+.applicationItemStatus > span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  color: var(--font-color-secondary);
+  margin-right: 20px;
+}
+
+.applicationItemText > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.applicationItemText > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #707991;
+}
+
+.applicationItemTime > p {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #707991;
+}
