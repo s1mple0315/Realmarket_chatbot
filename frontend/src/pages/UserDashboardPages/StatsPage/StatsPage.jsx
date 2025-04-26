@@ -11,7 +11,10 @@ const StatsPage = () => {
       <div className={styles.mainContent}>
         <div className="d-flex align-items-center justify-content-between">
           <h2 className={styles.title}>Сводка</h2>
-          <DashboardControls onTabChange={setActiveTab} />
+          <div className="d-flex align-items-center gap-3">
+            <DashboardControls onTabChange={setActiveTab} />
+            <span className={styles.dateTime}>01:03 - 12.04.25</span>
+          </div>
         </div>
         <DashboardStats activeTab={activeTab} />
       </div>

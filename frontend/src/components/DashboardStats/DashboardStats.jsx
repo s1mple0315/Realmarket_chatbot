@@ -24,7 +24,7 @@ ChartJS.register(
 const DashboardStats = ({ activeTab }) => {
   const [statsData, setStatsData] = useState({
     dialogs: { labels: [], dialogs: [], messages: [] },
-    views: { labels: [], views: [] },
+    widgetViews: { labels: [], views: [] },
     calls: { labels: [], calls: [] },
     conversion: { labels: [], conversion: [] },
     newDialogs: [],
@@ -34,41 +34,73 @@ const DashboardStats = ({ activeTab }) => {
     const mockData = {
       today: {
         dialogs: {
-          labels: ["14.04", "16.04", "18.04", "20.04"],
-          dialogs: [30, 20, 15, 10],
-          messages: [35, 25, 20, 15],
+          labels: [
+            "14.04",
+            "16.04",
+            "17.04",
+            "18.04",
+            "19.04",
+            "20.04",
+            "21.04",
+          ],
+          dialogs: [35, 20, 5, 10, 5, 5, 5],
+          messages: [40, 25, 15, 20, 15, 10, 10],
         },
-        views: {
-          labels: ["14.04", "16.04", "18.04", "20.04"],
-          views: [40, 30, 20, 10],
+        widgetViews: {
+          labels: [
+            "14.04",
+            "16.04",
+            "17.04",
+            "18.04",
+            "19.04",
+            "20.04",
+            "21.04",
+          ],
+          views: [40, 20, 5, 30, 5, 5, 5],
         },
         calls: {
-          labels: ["14.04", "16.04", "18.04", "20.04"],
-          calls: [25, 15, 10, 5],
+          labels: [
+            "14.04",
+            "16.04",
+            "17.04",
+            "18.04",
+            "19.04",
+            "20.04",
+            "21.04",
+          ],
+          calls: [35, 15, 5, 25, 5, 5, 5],
         },
         conversion: {
-          labels: ["14.04", "16.04", "18.04", "20.04"],
-          conversion: [20, 30, 10, 5],
+          labels: [
+            "14.04",
+            "16.04",
+            "17.04",
+            "18.04",
+            "19.04",
+            "20.04",
+            "21.04",
+          ],
+          conversion: [30, 10, 5, 20, 5, 5, 5],
         },
         newDialogs: [
           {
             id: 1,
             user: "User-73",
-            message: "Как мне зайти в личный кабинет...",
+            message: "Как мне зайти в личный кабинет если я забыл п...",
             time: "18:02",
             status: "done",
           },
           {
             id: 2,
             user: "User-71",
-            message: "Спасибо за ваш вопрос! Передавайте...",
+            message: "Спасибо за ваш запрос я передал ваши контакты...",
             time: "18:02",
             status: "done",
           },
           {
             id: 3,
             user: "User-25",
-            message: "Кастомизация доступна только для годового...",
+            message: "Кастомный доступ только для пользователя с 80 lvl",
             time: "17:42",
             status: "pending",
           },
@@ -80,7 +112,7 @@ const DashboardStats = ({ activeTab }) => {
           dialogs: [50, 40, 30, 20],
           messages: [60, 50, 40, 30],
         },
-        views: {
+        widgetViews: {
           labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
           views: [60, 50, 40, 30],
         },
@@ -115,7 +147,7 @@ const DashboardStats = ({ activeTab }) => {
           dialogs: [100, 80, 60, 40],
           messages: [120, 100, 80, 60],
         },
-        views: {
+        widgetViews: {
           labels: ["Jan", "Feb", "Mar", "Apr"],
           views: [120, 100, 80, 60],
         },
@@ -144,14 +176,60 @@ const DashboardStats = ({ activeTab }) => {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { position: "bottom" },
+      legend: {
+        position: "bottom",
+        align: "start",
+        labels: {
+          boxWidth: 16,
+          boxHeight: 16,
+          useBorderRadius: true,
+          borderRadius: 4,
+          font: {
+            family: "var(--montserrat-font)",
+            size: 14,
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          font: {
+            family: "var(--montserrat-font)",
+            size: 12,
+          },
+          color: "#707991",
+        },
+      },
+      y: {
+        beginAtZero: true,
+        max: 40,
+        ticks: {
+          stepSize: 10,
+          font: {
+            family: "var(--montserrat-font)",
+            size: 12,
+          },
+          color: "#707991",
+        },
+        grid: {
+          color: "rgba(112, 121, 145, 0.2)",
+        },
+      },
     },
   };
 
   return (
     <div className={styles.statsGrid}>
-      <div className={styles.chart}>
+      <StatsContainer
+        title="Количество диалогов и сообщений"
+        className={styles.largeChart}
+      >
         <Bar
           data={{
             labels: statsData.dialogs.labels,
@@ -170,40 +248,62 @@ const DashboardStats = ({ activeTab }) => {
               },
             ],
           }}
-          options={{
-            maintainAspectRatio: false,
-            responsive: true,
-            plugins: {
-              legend: {
-                align: "start",
-                position: "bottom",
-                labels: {
-                  boxWidth: 16,
-                  boxHeight: 16,
-                  useBorderRadius: true,
-                  borderRadius: 4,
-                },
-              },
-            },
-          }}
+          options={chartOptions}
         />
-      </div>
+      </StatsContainer>
 
-      <StatsContainer title="Просмотры визитки">
+      <StatsContainer title="Просмотры виджета">
         <Bar
           data={{
-            labels: statsData.views.labels,
+            labels: statsData.widgetViews.labels,
             datasets: [
               {
-                label: "Просмотры визитки за сутки",
-                data: statsData.views.views,
+                label: "Просмотры виджета за сутки",
+                data: statsData.widgetViews.views,
                 backgroundColor: "#6945ed",
+                borderRadius: 15,
               },
             ],
           }}
-          options={{ maintainAspectRatio: false, responsive: true }}
+          options={chartOptions}
         />
       </StatsContainer>
+
+      <StatsContainer title="Новые диалоги">
+        <ul className={styles.dialogList}>
+          {statsData.newDialogs.map((dialog) => (
+            <li key={dialog.id} className={styles.dialogItem}>
+              <span className={styles.user}>{dialog.user}</span>
+              <span className={styles.message}>{dialog.message}</span>
+              <span className={styles.time}>{dialog.time}</span>
+              <span className={styles.status}>
+                {dialog.status === "done" ? (
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 8L6 11L13 4"
+                      stroke="#00c853"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : (
+                  "⏳"
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <button className={styles.viewAllButton}>Смотреть все диалоги</button>
+      </StatsContainer>
+
+      {/* Second Row */}
       <StatsContainer title="Количество звонков">
         <Bar
           data={{
@@ -213,12 +313,14 @@ const DashboardStats = ({ activeTab }) => {
                 label: "Количество звонков за сутки",
                 data: statsData.calls.calls,
                 backgroundColor: "#6945ed",
+                borderRadius: 15,
               },
             ],
           }}
           options={chartOptions}
         />
       </StatsContainer>
+
       <StatsContainer title="Конверсия в звонки">
         <Bar
           data={{
@@ -228,26 +330,68 @@ const DashboardStats = ({ activeTab }) => {
                 label: "Конверсия в звонки за сутки",
                 data: statsData.conversion.conversion,
                 backgroundColor: "#6945ed",
+                borderRadius: 15,
               },
             ],
           }}
           options={chartOptions}
         />
       </StatsContainer>
-      <StatsContainer title="Новые диалоги">
+
+      <StatsContainer title="Новые звонки">
         <ul className={styles.dialogList}>
-          {statsData.newDialogs.map((dialog) => (
-            <li key={dialog.id} className={styles.dialogItem}>
-              <span className={styles.user}>{dialog.user}</span>
-              <span className={styles.message}>{dialog.message}</span>
-              <span className={styles.time}>{dialog.time}</span>
+          {[
+            {
+              id: 1,
+              user: "Разработка сайта",
+              message: "Статус заявки: входящая",
+              time: "13.04.25",
+              status: "done",
+            },
+            {
+              id: 2,
+              user: "Продвижение в соцсетях",
+              message: "Статус заявки: входящая",
+              time: "14.04.25",
+              status: "pending",
+            },
+            {
+              id: 3,
+              user: "Настройка директ",
+              message: "Статус заявки: отправлено добро",
+              time: "17:42",
+              status: "pending",
+            },
+          ].map((call) => (
+            <li key={call.id} className={styles.dialogItem}>
+              <span className={styles.user}>{call.user}</span>
+              <span className={styles.message}>{call.message}</span>
+              <span className={styles.time}>{call.time}</span>
               <span className={styles.status}>
-                {dialog.status === "done" ? "✔️" : "⏳"}
+                {call.status === "done" ? (
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 8L6 11L13 4"
+                      stroke="#00c853"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : (
+                  "⏳"
+                )}
               </span>
             </li>
           ))}
         </ul>
-        <button className={styles.viewAllButton}>Смотреть все диалоги</button>
+        <button className={styles.viewAllButton}>Смотреть все заявки</button>
       </StatsContainer>
     </div>
   );

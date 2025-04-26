@@ -1,10 +1,33 @@
 .dashboard {
+  height: 100vh; /* Full viewport height */
   display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    135deg,
+    #f0f0ff,
+    #e0e0ff
+  ); /* Same background as ApplicationPage */
+  padding: 40px; /* Same padding as ApplicationPage */
 }
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
 .title {
   font-family: var(--unbounded-font);
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 32px; /* Match screenshot */
+  font-weight: 400; /* Match screenshot */
   color: var(--font-color-primary);
-  margin: 0 0 20px;
+  margin: 0;
+}
+
+.dateTime {
+  font-family: var(--unbounded-font);
+  font-size: 16px;
+  font-weight: 400;
+  color: #707991; /* Match the gray color from screenshot */
 }
