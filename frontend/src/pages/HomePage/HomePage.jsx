@@ -1,68 +1,86 @@
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
+import styles from "./HomePage.module.css";
+
 const HomePage = () => {
   return (
     <div>
       <Header />
-      <section>
-        <div>
-          <h1>
-            ИИ⁠-⁠сотрудник <span>для вашего бизнеса</span>
-          </h1>
+      <section className={styles.homePageTitle}>
+        <div className={styles.homePageTitleText}>
+          <h1>ИИ⁠-⁠сотрудник</h1>
+          <h3>для вашего бизнеса</h3>
         </div>
-        <div>
-          <div>
-            <h3>80%</h3>
-            <p>Экономия на зарплате сотрудникам</p>
-          </div>
-          <div>
-            <h3>+30%</h3>
-            <p>К конверсии и выручке вашей компании</p>
-          </div>
-          <div>
-            <h3>{">"}20</h3>
-            <p>Часов в неделю экономит вам ИИ-сотрудник</p>
+        <div className={styles.homePageTitleStats}>
+          <p className={styles.homePageTitleStatsText}>
+            Ловит потенциальных клиентов в воронку прогрева, квалифицирует
+            входящие заявки
+          </p>
+          <p className={styles.homePageTitleStatsText}>
+            и доводит до покупки без менеджеров в чате
+          </p>
+          <div className={styles.homePageTitleStatsItems}>
+            <div className={styles.homePageTitleStatsItem}>
+              <h3>80%</h3>
+              <p>Экономия на зарплате сотрудникам</p>
+            </div>
+            <div className={styles.homePageTitleStatsItem}>
+              <h3>+30%</h3>
+              <p>К конверсии и выручке вашей компании</p>
+            </div>
+            <div className={styles.homePageTitleStatsItem}>
+              <h3>{">"}20</h3>
+              <p>Часов в неделю экономит вам ИИ-сотрудник</p>
+            </div>
           </div>
         </div>
-        <div>
+        <div className={styles.homePageTitleButton}>
           <button>Попробовать бесплатно</button>
         </div>
       </section>
-      <section>
-        <div>
+
+      <section className={styles.homePageInfo}>
+        <div className={styles.homePageInfoText}>
           <h1>
             Наймите <span>ИИ-сотрудника</span>
           </h1>
         </div>
-        <div>
-          <div>
+        <p className={styles.homePageInfoItemsText}>
+          который выучит весь ваш ассортимент, будет на связи с клиентом 24/7 и
+          профессионально продавать ваш продукт
+        </p>
+        <div className={styles.homePageInfoItems}>
+          <div className={styles.homePageInfoItem}>
             <h3>Консультация</h3>
-            <div>
+            <div className={styles.homePageInfoItemText}>
               <p>за 5 минут создадим ИИ⁠-⁠ассистента под ваши задачи</p>
               <p>настроим его в соответствии с вашими целями и вкусами</p>
               <p>покажем весь функционал и научим им пользоваться</p>
             </div>
           </div>
-          <div>
+          <div className={styles.homePageInfoItem}>
             <h3>Тестирование</h3>
-            <div>
+            <div className={styles.homePageInfoItemText}>
               <p>за 5 минут создадим ИИ⁠-⁠ассистента под ваши задачи</p>
               <p>настроим его в соответствии с вашими целями и вкусами</p>
               <p>покажем весь функционал и научим им пользоваться</p>
             </div>
           </div>
-          <div>
+          <div className={styles.homePageInfoItem}>
             <h3>Включайте в работу</h3>
-            <div>
+            <div className={styles.homePageInfoItemText}>
               <p>за 5 минут создадим ИИ⁠-⁠ассистента под ваши задачи</p>
               <p>настроим его в соответствии с вашими целями и вкусами</p>
               <p>покажем весь функционал и научим им пользоваться</p>
             </div>
           </div>
         </div>
-        <div>Вернем 100% средств, если вам что-то не понравится</div>
+        <div className={styles.homePageInfoReturn}>
+          Вернем 100% средств, если вам что-то не понравится
+        </div>
       </section>
+
       <section>
         <div>
           <h1>
@@ -103,6 +121,7 @@ const HomePage = () => {
           <p>которые можно потратить на развитие компании</p>
         </div>
       </section>
+
       <section>
         <h1>
           ИИ-сотрудник продает <span>лучше человека</span>
@@ -130,6 +149,7 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
       <section>
         <h1>
           Один в поле <span>эффективный воин</span>

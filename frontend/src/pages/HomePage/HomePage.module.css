@@ -1,0 +1,212 @@
+.homePageTitle {
+  background-image: url("/assets/images/Background/waves.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 150px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.homePageTitleText > h1 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 77px;
+  text-align: center;
+  margin: 0;
+}
+
+.homePageTitleText > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-size: 64px;
+  line-height: 77px;
+  text-align: center;
+  background: linear-gradient(180deg, #af98ff 42.47%, #6945ed 93.1%), #d9d9d9;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.homePageTitleStatsText {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 18px;
+  line-height: 25px;
+  text-align: center;
+  margin: 0;
+}
+
+.homePageTitleStatsItems {
+  display: flex;
+  gap: 48px;
+  margin-top: 40px;
+  margin-bottom: 80px;
+}
+
+.homePageTitleStatsItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  gap: 3px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(255, 255, 255, 0.2) 5.05%,
+    rgba(199, 189, 255, 0.2) 107.06%
+  );
+  backdrop-filter: blur(15.85px);
+  border-radius: 20px;
+}
+
+.homePageTitleStatsItem::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  padding: 2px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(105, 69, 237, 0.8),
+    rgba(199, 189, 255, 0.8)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.homePageTitleStatsItem > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 55px;
+  line-height: 66px;
+  text-align: center;
+  background: linear-gradient(180deg, #af98ff 27.83%, #6945ed 85.64%), #6945ed;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.homePageTitleStatsItem > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  margin: 0;
+}
+
+.homePageTitleButton > button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 40px;
+  gap: 10px;
+  isolation: isolate;
+  background: linear-gradient(0deg, #6945ed, #6945ed), #ffffff;
+  border-radius: 50px;
+  border: none;
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+.homePageInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.homePageInfoText > h1 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-size: 48px;
+  line-height: 58px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.homePageInfoText > h1 > span {
+  background: linear-gradient(180deg, #af98ff 8.62%, #6945ed 81.03%), #000000;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.homePageInfoItemsText {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 18px;
+  line-height: 25px;
+  text-align: center;
+  margin: 0;
+}
+
+.homePageInfoItems {
+  margin-top: 35px;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.homePageInfoItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 40px;
+  gap: 26px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(255, 255, 255, 0.2) 5.05%,
+    rgba(199, 189, 255, 0.2) 107.06%
+  );
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+}
+
+.homePageInfoItem::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  padding: 2px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(105, 69, 237, 0.8),
+    rgba(199, 189, 255, 0.8)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.homePageInfoItemText {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.homePageInfoItemText > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 15px;
+  line-height: 21px;
+  margin: 0;
+}
