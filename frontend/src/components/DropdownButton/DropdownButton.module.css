@@ -1,0 +1,27 @@
+.dropdownButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  width: 100%;
+  background: transparent;
+  border: 2px solid #6945ed;
+  border-radius: 15px;
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #000;
+  cursor: pointer;
+}
+
+.chevronIcon {
+  margin-left: 10px;
+}
+
+@supports not (border-image: var(--radial-gradient)) {
+  .dropdownButton {
+    border: 2px dashed #6945ed;
+  }
+}
