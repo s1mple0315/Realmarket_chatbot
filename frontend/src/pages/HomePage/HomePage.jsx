@@ -2,6 +2,10 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
 import styles from "./HomePage.module.css";
+import Chat from "../../icons/Chat";
+import CRM from "../../icons/CRM";
+import Branching from "../../icons/Branching";
+import Testing from "../../icons/Testing";
 
 const HomePage = () => {
   return (
@@ -77,23 +81,21 @@ const HomePage = () => {
           </div>
         </div>
         <div className={styles.homePageInfoReturn}>
-          Вернем 100% средств, если вам что-то не понравится
+          <p>Вернем 100% средств, если вам что-то не понравится</p>
         </div>
       </section>
 
-      <section>
-        <div>
-          <h1>
-            Сколько времени вы высвобождаете{" "}
-            <span>с ИИ-сотрудником в неделю?</span>
-          </h1>
+      <section className={styles.homePageTime}>
+        <div className={styles.homePageTimeText}>
+          <h1>Сколько времени вы высвобождаете</h1>
+          <h2>с ИИ-сотрудником в неделю?</h2>
           <p>
             Нстроив один раз ИИ-сотрудника вы высвобождаете себе, РОПу и HR от
             20 часов в неделю и более, которые можно потратить на развитие
             компании
           </p>
         </div>
-        <div>
+        <div className={styles.homePageTimeItems}>
           <div>
             <h3>10 часов</h3>
             <p>На поиск и найм менеджеров и технических специалистов</p>
@@ -113,7 +115,7 @@ const HomePage = () => {
             </p>
           </div>
         </div>
-        <div>
+        <div className={styles.homePageTimeReturn}>
           <p>Нстроив один раз ИИ-сотрудника вы высвобождаете себе, РОПу и HR</p>
           <h3>
             от 20 часов <span>в неделю</span>
@@ -122,48 +124,90 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section>
+      <section className={styles.homePageAdvantages}>
         <h1>
           ИИ-сотрудник продает <span>лучше человека</span>
         </h1>
-        <div>
-          <div>
+        <div className={styles.homePageAdvantagesItems}>
+          <div className={styles.homePageAdvantagesItem}>
             <h3>Человек</h3>
-            <div>
-              <p></p>
-              <p></p>
-              <p></p>
-              <p></p>
-              <p></p>
+            <div className={styles.homePageAdvantagesItemText}>
+              <p>не успевает отвечать в потоке клиентов</p>
+              <p>отходит от скрипта и продает «по-своему»</p>
+              <p>берет отпуска, больничные, выходные</p>
+              <p>отвечает только в рабочее время</p>
+              <p>
+                зависит от своего состояния — не проявляет инициативу, срывается
+                на клиентов
+              </p>
             </div>
           </div>
-          <div>
+          <div className={styles.homePageAdvantagesItem}>
             <h3>ИИ-сотрудник</h3>
-            <div>
-              <p></p>
-              <p></p>
-              <p></p>
-              <p></p>
-              <p></p>
+            <div className={styles.homePageAdvantagesItemText}>
+              <p>
+                сам ловит пользователя в диалог и ведет одновременно более 50
+                000 диалогов
+              </p>
+              <p>
+                четко следует инструкциям и в продаже исходит из запроса клиента
+              </p>
+              <p>не болеет и не нуждается в отдыхе</p>
+              <p>эффективен круглосуточно и даже на выходных</p>
+              <p>
+                отвечает за полсекунды — дружелюбно общается, самообучается
+                на собственных диалогах
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section>
+      <section className={styles.homePageFeatures}>
         <h1>
           Один в поле <span>эффективный воин</span>
         </h1>
         <p>Все для усиления и автоматизации продаж в одном сервисе</p>
-        <div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div>
-          <img src="" alt="" />
+        <div className={styles.homePageFeaturesItems}>
           <div>
+            <Chat />
+            <h3>Персональные ответы</h3>
+            <p>
+              Помощник считывает запрос клиента и продает с позиции его выгод,
+              а не по общему скрипту
+            </p>
+          </div>
+          <div>
+            <Branching />
+            <h3>Адаптивные сценарии</h3>
+            <p>
+              Скрипты ИИ⁠-⁠менеджера подстраиваются под социальный портрет, опыт
+              и потребности клиента автоматически
+            </p>
+          </div>
+          <div>
+            <CRM />
+            <h3>Интеграция с CRM</h3>
+            <p>
+              Отслеживает статус лида и подстраивает диалоги под этап в воронке
+              продаж, на котором находится клиент
+            </p>
+          </div>
+          <div>
+            <Testing />
+            <h3>A/B-тестирование</h3>
+            <p>
+              Самостоятельно тестирует разные сценарии и отбирает наиболее
+              эффективные из них для работы
+            </p>
+          </div>
+        </div>
+        <div className={styles.homePageFeaturesDashboard}>
+          <img
+            src="assets/images/dashboard_screen.png"
+            alt="Respresentation of the dashboard"
+          />
+          <div className={styles.homePageFeaturesDashboardText}>
             <h3>Удобный личный кабинет с аналитикой и настройками</h3>
             <p>
               Весь процесс интеграции ИИ⁠-⁠ассистента Solo в бизнес, включая
@@ -174,13 +218,42 @@ const HomePage = () => {
             </p>
           </div>
         </div>
-        <div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+        <div className={styles.homePageFeaturesItems}>
+          <div>
+            <Chat />
+            <h3>Повышение вовлечённости</h3>
+            <p>
+              Сам прогревает клиента, предоставляя ему ценные материалы и
+              специальные условия из вашей базы
+            </p>
+          </div>
+          <div>
+            <Chat />
+            <h3>Круглосуточная поддержка</h3>
+            <p>
+              Работает 24/7, без перерывов и выходных. Будет вести клиента,
+              отвечая за секунду даже ночью
+            </p>
+          </div>
+          <div>
+            <Chat />
+            <h3>Передача диалога менеджеру</h3>
+            <p>
+              В ситуации вне базы данных ИИ⁠-⁠менеджера клиент передается живому
+              менеджеру вместе с ревью и историей их общения
+            </p>
+          </div>
+          <div>
+            <Chat />
+            <h3>Мгновенная реакция на запросы</h3>
+            <p>
+              Помощник обрабатывает запрос клиента за секунды и дает
+              качественный ответ даже в периоды пиковых нагрузок
+            </p>
+          </div>
         </div>
       </section>
+
       <section>
         <div>
           <h1>
@@ -206,10 +279,12 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
       <section>
         <div></div>
         <div></div>
       </section>
+
       <section>
         <div>
           <h1></h1>
@@ -220,6 +295,7 @@ const HomePage = () => {
           <div></div>
         </div>
       </section>
+
       <section>
         <h1></h1>
         <div>
