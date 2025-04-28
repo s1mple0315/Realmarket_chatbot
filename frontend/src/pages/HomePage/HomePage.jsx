@@ -9,6 +9,7 @@ import Testing from "../../icons/Testing";
 import Rocket from "../../icons/Rocket";
 import Brain from "../../icons/Brain";
 import Chip from "../../icons/Chip";
+import Accordion from "../../components/Accordion/Accordion";
 
 const HomePage = () => {
   return (
@@ -306,9 +307,70 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section>
-        <div></div>
-        <div></div>
+      <section className={styles.homePageFaq}>
+        <div className={styles.homePageFaqItems}>
+          <Accordion
+            title={"Сколько стоит?"}
+            content={
+              "Код написан с учетом всех пунктов законодательства РФ, активно применяется в крупных компаниях больше года и поддерживается командой разработчиков, которые защищают его от взломов, утечки данных и других последствий кибератак. "
+            }
+          />
+          <Accordion
+            title={"Насколько это безопасно?"}
+            content={
+              "Код написан с учетом всех пунктов законодательства РФ, активно применяется в крупных компаниях больше года и поддерживается командой разработчиков, которые защищают его от взломов, утечки данных и других последствий кибератак. "
+            }
+          />
+          <Accordion
+            title={"Что можно настроить?"}
+            content={
+              "Код написан с учетом всех пунктов законодательства РФ, активно применяется в крупных компаниях больше года и поддерживается командой разработчиков, которые защищают его от взломов, утечки данных и других последствий кибератак. "
+            }
+          />
+          <Accordion
+            title={"Интегрируется ли Solo с моей CRM-системой?"}
+            content={
+              "Код написан с учетом всех пунктов законодательства РФ, активно применяется в крупных компаниях больше года и поддерживается командой разработчиков, которые защищают его от взломов, утечки данных и других последствий кибератак. "
+            }
+          />
+          <Accordion
+            title={"Подходит ли Solo для моего бизнеса?"}
+            content={
+              "Код написан с учетом всех пунктов законодательства РФ, активно применяется в крупных компаниях больше года и поддерживается командой разработчиков, которые защищают его от взломов, утечки данных и других последствий кибератак. "
+            }
+          />
+        </div>
+        <div className={styles.homePageFaqForm}>
+          <div className={styles.homePageFaqFormTitle}>
+            <h3>
+              Протестируйте ИИ-сотрудника бесплатно
+              <span>
+                и начните получать на 30% больше конверсий уже сегодня
+              </span>
+            </h3>
+            <p>
+              95% наших клиентов отмечают рост статистики даже за 2 пробные
+              недели
+            </p>
+          </div>
+          <div className={styles.homePageFaqFormInputs}>
+            <div className={styles.homePageFaqFormInputsTop}>
+              <div>
+                <input type="text" placeholder="Ваше имя" />
+              </div>
+              <div>
+                <input type="text" placeholder="+7 (___) ___-__-__" />
+              </div>
+              <div>
+                <input type="text" placeholder="Сайт или Инстаграм" />
+              </div>
+            </div>
+            <div className={styles.homePageFaqFormInputsBottom}>
+              <input type="text" placeholder="Комментарий" />
+            </div>
+            <button>Круто! Хочу получить пробный период</button>
+          </div>
+        </div>
       </section>
 
       <section>

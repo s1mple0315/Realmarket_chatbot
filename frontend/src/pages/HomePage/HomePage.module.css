@@ -701,6 +701,151 @@
   margin-bottom: 0;
 }
 
+.homePageFaq {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 30px;
+  padding: 0 30px;
+  margin-bottom: 149px;
+}
+
+.homePageFaq > div {
+  width: 50%;
+}
+
+.homePageFaqForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.homePageFaqFormTitle > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-size: 48px;
+  line-height: 58px;
+  margin-bottom: 0;
+}
+
+.homePageFaqFormTitle > h3 > span {
+  background: linear-gradient(180deg, #af98ff 8.62%, #6945ed 81.03%), #000000;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.homePageFaqFormTitle > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 18px;
+  line-height: 25px;
+  margin-bottom: 0;
+}
+
+.homePageFaqFormInputs {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  gap: 20px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(255, 255, 255, 0.2) 5.05%,
+    rgba(199, 189, 255, 0.2) 107.06%
+  );
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+  margin-top: 27px;
+}
+
+.homePageFaqFormInputs::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  padding: 2px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(105, 69, 237, 0.8),
+    rgba(199, 189, 255, 0.8)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.homePageFaqFormInputsTop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 15px;
+}
+
+.homePageFaqFormInputsTop > div {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 25px 30px;
+  border: 1px solid rgba(105, 69, 237, 0.5);
+  border-radius: 70px;
+}
+
+.homePageFaqFormInputsTop > div > input {
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  width: 100%;
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 16px;
+  line-height: 24px;
+  color: #464646;
+}
+
+.homePageFaqFormInputsBottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 25px 30px;
+  gap: 10px;
+  border: 1px solid rgba(105, 69, 237, 0.5);
+  border-radius: 70px;
+  width: 100%;
+}
+
+.homePageFaqFormInputsBottom > input {
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  width: 100%;
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 16px;
+  line-height: 24px;
+  color: #464646;
+}
+
+.homePageFaqFormInputs > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 40px;
+  background: linear-gradient(0deg, #6945ed, #6945ed), #ffffff;
+  border-radius: 50px;
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #ffffff;
+  width: 421px;
+  border: none;
+  margin: 0 auto;
+}
+
 .homePageAbilities {
   display: flex;
   flex-direction: column;
