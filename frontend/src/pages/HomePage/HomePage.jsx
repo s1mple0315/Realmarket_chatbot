@@ -6,6 +6,9 @@ import Chat from "../../icons/Chat";
 import CRM from "../../icons/CRM";
 import Branching from "../../icons/Branching";
 import Testing from "../../icons/Testing";
+import Rocket from "../../icons/Rocket";
+import Brain from "../../icons/Brain";
+import Chip from "../../icons/Chip";
 
 const HomePage = () => {
   return (
@@ -319,14 +322,61 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section>
-        <h1></h1>
-        <div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+      <section className={styles.homePageAbilities}>
+        <h1>
+          Собственные <span>разработки</span>
+        </h1>
+        <div className={styles.homePageAbilitiesItems}>
+          <div>
+            <Rocket />
+            <h3>
+              Realbot <br /> <span>leadbooster™</span>
+            </h3>
+            <p>
+              Помощник считывает запрос клиента и продает с позиции его выгод,
+              а не по общему скрипту
+            </p>
+          </div>
+          <div>
+            <Testing />
+            <h3>
+              Realbot <br /> <span>intelligence™</span>
+            </h3>
+            <p>
+              Помощник считывает запрос клиента и продает с позиции его выгод,
+              а не по общему скрипту
+            </p>
+          </div>
+          <div>
+            <Chat />
+            <h3>
+              Realbot <br /> <span>perfomance™</span>
+            </h3>
+            <p>
+              Помощник считывает запрос клиента и продает с позиции его выгод,
+              а не по общему скрипту
+            </p>
+          </div>
+          <div>
+            <Brain />
+            <h3>
+              Realbot <br /> <span>education™</span>
+            </h3>
+            <p>
+              Помощник считывает запрос клиента и продает с позиции его выгод,
+              а не по общему скрипту
+            </p>
+          </div>
+          <div>
+            <Chip />
+            <h3>
+              Realbot <br /> <span>navitechnology™</span>
+            </h3>
+            <p>
+              Помощник считывает запрос клиента и продает с позиции его выгод,
+              а не по общему скрипту
+            </p>
+          </div>
         </div>
       </section>
       <Footer />

@@ -700,3 +700,90 @@
   line-height: 21px;
   margin-bottom: 0;
 }
+
+.homePageAbilities {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  margin-bottom: 210px;
+}
+
+.homePageAbilities > h1 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-size: 48px;
+  line-height: 58px;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.homePageAbilities > h1 > span {
+  background: linear-gradient(180deg, #af98ff 8.62%, #6945ed 81.03%), #000000;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.homePageAbilitiesItems {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 0 30px;
+}
+
+.homePageAbilitiesItems > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 40px;
+  gap: 20px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(255, 255, 255, 0.2) 5.05%,
+    rgba(199, 189, 255, 0.2) 107.06%
+  );
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+}
+
+.homePageAbilitiesItems > div::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  padding: 2px;
+  background: linear-gradient(
+    232.68deg,
+    rgba(105, 69, 237, 0.8),
+    rgba(199, 189, 255, 0.8)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.homePageAbilitiesItems > div > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-size: 24px;
+  line-height: 30px;
+  margin-bottom: 0;
+}
+
+.homePageAbilitiesItems > div > h3 > span {
+  background: linear-gradient(180deg, #af98ff 8.62%, #6945ed 81.03%), #000000;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.homePageAbilitiesItems > div > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 15px;
+  line-height: 21px;
+  margin-bottom: 0;
+}
