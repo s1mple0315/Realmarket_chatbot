@@ -1,99 +1,281 @@
-import datetime
-import bleach
-from fastapi import APIRouter, HTTPException, Depends
-import openai
-from fastapi_limiter import FastAPILimiter
-from fastapi_limiter.depends import RateLimiter
-from app.models.assistant import Assistant, AssistantConfig, AssistantMongoModel
-from fastapi import Request
-from app.services.assitant_service import (
-    add_message,
-    create_assistant,
-    get_assistant,
-    get_chat,
-    run_chat,
-    start_new_chat,
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+    WebSocket,
+    WebSocketDisconnect,
 )
 from app.services.auth_service import verify_token
 from app.database import db
-from loguru import logger
+import os
+from openai import OpenAI, AuthenticationError
+from datetime import datetime
+from pydantic import BaseModel, Field, validator
+from typing import Optional, List, Dict, Any
 
 router = APIRouter()
 
+# Initialize OpenAI client
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise HTTPException(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        detail="OpenAI API key is not configured",
+    )
 
-@router.post("/", response_model=Assistant)
-async def create_new_assistant(
-    assistant_config: AssistantConfig,
-    request: Request,
-    user_id: str = Depends(verify_token),
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+
+# Request models
+class Tool(BaseModel):
+    type: str = Field(
+        ..., description="Tool type, e.g., 'code_interpreter' or 'file_search'"
+    )
+
+    @validator("type")
+    def validate_tool_type(cls, v):
+        allowed_types = ["code_interpreter", "file_search", "function"]
+        if v not in allowed_types:
+            raise ValueError(f"Tool type must be one of {allowed_types}")
+        return v
+
+
+class CreateAssistantRequest(BaseModel):
+    name: Optional[str] = None
+    instructions: Optional[str] = (
+        "You are a helpful assistant for an e-commerce chatbot."
+    )
+    model: Optional[str] = "gpt-4o-mini"
+    tools: Optional[List[Tool]] = None
+    tool_resources: Optional[Dict[str, Any]] = None
+
+
+class UpdateAssistantRequest(BaseModel):
+    name: Optional[str] = None
+    instructions: Optional[str] = None
+
+
+@router.post("/assistants/")
+async def create_assistant(
+    request: CreateAssistantRequest, user_id: str = Depends(verify_token)
 ):
-    user_id = request.state.user_id
-    if not user_id:
-        raise HTTPException(status_code=401, detail="User not authenticated")
+    try:
+        assistant_name = request.name or f"Assistant for {user_id}"
+        tools = [tool.dict() for tool in request.tools] if request.tools else []
+        if len(tools) > 128:
+            raise HTTPException(status_code=400, detail="Maximum 128 tools allowed")
 
-    assistant = create_assistant(
-        client=openai,
-        name=assistant_config.name,
-        description=assistant_config.description,
-        instructions=assistant_config.instructions,
-        tools=assistant_config.tools,
-    )
-    if isinstance(assistant, str):
-        raise HTTPException(status_code=500, detail=assistant)
+        tool_resources = request.tool_resources or {}
+        if "code_interpreter" in tool_resources:
+            file_ids = tool_resources["code_interpreter"].get("file_ids", [])
+            if len(file_ids) > 20:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Maximum 20 files allowed for code_interpreter",
+                )
 
-    assistant_data = AssistantMongoModel(
-        user_id=user_id,
-        assistant_id=assistant.id,
-        name=assistant_config.name,
-        instructions=assistant_config.instructions,
-        tone=assistant_config.tone,
-        website_data=assistant_config.website_data,
-    )
-    assistant_data.save()
-
-    return assistant_data
-
-
-@router.post(
-    "/{assistant_id}/query",
-    response_model=dict,
-    dependencies=[Depends(RateLimiter(times=10, seconds=60))],
-)
-async def query_assistant_route(
-    assistant_id: str, user_query: str, user_id: str = Depends(verify_token)
-):
-    logger.info(f"Query for assistant {assistant_id} by user {user_id}")
-    user_query = bleach.clean(user_query)
-    assistant = get_assistant(client=openai, assistant_id=assistant_id)
-    if isinstance(assistant, str):
-        raise HTTPException(status_code=404, detail=assistant)
-
-    threads_collection = db.threads
-    thread_data = threads_collection.find_one(
-        {"user_id": user_id, "assistant_id": assistant_id}
-    )
-    if thread_data:
-        thread = get_chat(client=openai, thread_id=thread_data["thread_id"])
-    else:
-        thread = start_new_chat(client=openai)
-        threads_collection.insert_one(
-            {
-                "user_id": user_id,
-                "assistant_id": assistant_id,
-                "thread_id": thread.id,
-                "created_at": datetime.datetime.utcnow(),
-            }
+        assistant = client.beta.assistants.create(
+            name=assistant_name,
+            instructions=request.instructions,
+            model=request.model,
+            tools=tools,
+            tool_resources=tool_resources,
         )
 
-    if isinstance(thread, str):
-        raise HTTPException(status_code=500, detail=thread)
+        assistant_data = {
+            "assistant_id": assistant.id,
+            "user_id": user_id,
+            "name": assistant_name,
+            "instructions": request.instructions,
+            "model": request.model,
+            "tools": tools,
+            "tool_resources": tool_resources,
+            "created_at": datetime.utcnow(),
+        }
+        await db.assistants.insert_one(assistant_data)
 
-    message = add_message(client=openai, thread=thread, content=user_query)
-    if isinstance(message, str):
-        raise HTTPException(status_code=500, detail=message)
+        return {
+            "message": f"Assistant {assistant.id} created by {user_id}",
+            "assistant_id": assistant.id,
+        }
+    except AuthenticationError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid OpenAI API key"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to create assistant: {str(e)}",
+        )
 
-    response = run_chat(client=openai, thread=thread, assistant=assistant)
-    if isinstance(response, str):
-        raise HTTPException(status_code=500, detail=response)
 
-    return {"response": response}
+@router.get("/assistants/")
+async def list_assistants(user_id: str = Depends(verify_token)):
+    assistants = await db.assistants.find({"user_id": user_id}).to_list(length=100)
+    for assistant in assistants:
+        assistant.pop("_id", None)
+    return {"assistants": assistants}
+
+
+@router.put("/assistants/{assistant_id}")
+async def update_assistant(
+    assistant_id: str,
+    request: UpdateAssistantRequest,
+    user_id: str = Depends(verify_token),
+):
+    assistant = await db.assistants.find_one(
+        {"assistant_id": assistant_id, "user_id": user_id}
+    )
+    if not assistant:
+        raise HTTPException(
+            status_code=404, detail="Assistant not found or not authorized"
+        )
+
+    try:
+        updated_assistant = client.beta.assistants.update(
+            assistant_id=assistant_id,
+            name=request.name or assistant["name"],
+            instructions=request.instructions or assistant["instructions"],
+        )
+
+        update_data = {
+            "name": updated_assistant.name,
+            "instructions": updated_assistant.instructions,
+            "updated_at": datetime.utcnow(),
+        }
+        await db.assistants.update_one(
+            {"assistant_id": assistant_id}, {"$set": update_data}
+        )
+
+        return {"message": f"Assistant {assistant_id} updated successfully"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to update assistant: {str(e)}"
+        )
+
+
+@router.delete("/assistants/{assistant_id}")
+async def delete_assistant(assistant_id: str, user_id: str = Depends(verify_token)):
+    assistant = await db.assistants.find_one(
+        {"assistant_id": assistant_id, "user_id": user_id}
+    )
+    if not assistant:
+        raise HTTPException(
+            status_code=404, detail="Assistant not found or not authorized"
+        )
+
+    try:
+        client.beta.assistants.delete(assistant_id=assistant_id)
+        await db.assistants.delete_one({"assistant_id": assistant_id})
+        await db.conversations.delete_many({"assistant_id": assistant_id})
+        return {"message": f"Assistant {assistant_id} deleted successfully"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to delete assistant: {str(e)}"
+        )
+
+
+@router.websocket("/assistants/{assistant_id}/ws")
+async def chat_with_assistant(websocket: WebSocket, assistant_id: str, token: str):
+    await websocket.accept()
+    try:
+        # Authenticate user using the token
+        user_id = verify_token(token)
+
+        # Verify assistant exists and belongs to user
+        assistant = await db.assistants.find_one(
+            {"assistant_id": assistant_id, "user_id": user_id}
+        )
+        if not assistant:
+            await websocket.send_json(
+                {"error": "Assistant not found or not authorized"}
+            )
+            await websocket.close()
+            return
+
+        # Create a new thread for this WebSocket session
+        thread = client.beta.threads.create()
+        thread_id = thread.id
+
+        await websocket.send_json({"status": "connected", "thread_id": thread_id})
+
+        while True:
+            # Receive message from client
+            data = await websocket.receive_json()
+            message = data.get("message")
+            if not message:
+                await websocket.send_json({"error": "Message is required"})
+                continue
+
+            try:
+                # Add user message to thread
+                client.beta.threads.messages.create(
+                    thread_id=thread_id, role="user", content=message
+                )
+
+                # Run the assistant on the thread
+                run = client.beta.threads.runs.create(
+                    thread_id=thread_id, assistant_id=assistant_id
+                )
+
+                # Poll for completion and stream updates
+                while run.status in ["queued", "in_progress"]:
+                    run = client.beta.threads.runs.retrieve(
+                        thread_id=thread_id, run_id=run.id
+                    )
+                    await websocket.send_json({"status": run.status})
+
+                if run.status != "completed":
+                    await websocket.send_json(
+                        {"error": f"Run failed with status: {run.status}"}
+                    )
+                    continue
+
+                # Get assistant's response
+                messages = client.beta.threads.messages.list(thread_id=thread_id)
+                assistant_response = next(
+                    (
+                        msg.content[0].text.value
+                        for msg in messages.data
+                        if msg.role == "assistant"
+                    ),
+                    "No response from assistant",
+                )
+
+                # Store conversation in MongoDB
+                conversation = {
+                    "thread_id": thread_id,
+                    "assistant_id": assistant_id,
+                    "user_id": user_id,
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": message,
+                            "timestamp": datetime.utcnow(),
+                        },
+                        {
+                            "role": "assistant",
+                            "content": assistant_response,
+                            "timestamp": datetime.utcnow(),
+                        },
+                    ],
+                    "created_at": datetime.utcnow(),
+                }
+                await db.conversations.insert_one(conversation)
+
+                # Send response back to client
+                await websocket.send_json({"response": assistant_response})
+            except AuthenticationError:
+                await websocket.send_json({"error": "Invalid OpenAI API key"})
+                await websocket.close()
+                break
+            except Exception as e:
+                await websocket.send_json({"error": f"Chat failed: {str(e)}"})
+                continue
+
+    except WebSocketDisconnect:
+        await websocket.close()
+    except Exception as e:
+        await websocket.send_json({"error": f"Connection failed: {str(e)}"})
+        await websocket.close()

@@ -72,7 +72,9 @@ services:
     volumes:
       - mongo_data:/data/db
     expose:
-      - 27017
+      - 27018
+    ports:
+      - "27018:27017"
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 30s
