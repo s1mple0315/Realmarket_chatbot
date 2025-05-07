@@ -1,5 +1,13 @@
 .header {
   margin: 41px 38px;
+  position: relative;
+}
+
+.headerBack {
+  position: absolute;
+  top: -41px;
+  right: -38px;
+  z-index: -1;
 }
 
 .navList {

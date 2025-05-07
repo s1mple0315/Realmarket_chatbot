@@ -34,6 +34,16 @@ const Footer = () => {
 
   return (
     <footer className={`${styles.footer} d-flex flex-column`}>
+      <img
+        className={styles.footerBack1}
+        src="assets/images/Background/footer_back1.svg"
+        alt=""
+      />
+      <img
+        className={styles.footerBack2}
+        src="assets/images/Background/footer_back2.svg"
+        alt=""
+      />
       <div className={`${styles.footerTop} d-flex`}>
         <div className={`${styles.footerTopLogoContainer} d-flex flex-column`}>
           <div className={styles.footerTopLogo}>

@@ -46,6 +46,11 @@ const HomePage = () => {
         <div className={styles.homePageTitleButton}>
           <button>Попробовать бесплатно</button>
         </div>
+        <img
+          className={styles.homePageTitleBack}
+          src="/assets/images/Background/custom_back.svg"
+          alt=""
+        />
       </section>
 
       <section className={styles.homePageInfo}>
@@ -129,6 +134,11 @@ const HomePage = () => {
       </section>
 
       <section className={styles.homePageAdvantages}>
+        <img
+          className={styles.homePageAdvantagesBack}
+          src="assets/images/Background/homepageAdvantages_back.svg"
+          alt=""
+        />
         <h1>
           ИИ-сотрудник продает <span>лучше человека</span>
         </h1>
@@ -259,6 +269,11 @@ const HomePage = () => {
       </section>
 
       <section className={styles.homePageHowItWorks}>
+        <img
+          className={styles.homePageHowItWorksBack}
+          src="assets/images/Background/homepageHowItWorks_back.svg"
+          alt=""
+        />
         <div className={styles.homePageHowItWorksTitle}>
           <h1>
             Чем вам поможет <span>ИИ-сотрудник?</span>
@@ -308,6 +323,11 @@ const HomePage = () => {
       </section>
 
       <section className={styles.homePageFaq}>
+        <img
+          className={styles.homePageFaqBack}
+          src="assets/images/Background/homepageFaq_back.svg"
+          alt=""
+        />
         <div className={styles.homePageFaqItems}>
           <Accordion
             title={"Сколько стоит?"}

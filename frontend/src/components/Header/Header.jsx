@@ -33,6 +33,11 @@ const Header = () => {
         </Link>
         <button>Попробовать бесплатно</button>
       </div>
+      <img
+        className={styles.headerBack}
+        src="assets/images/Background/header_back.svg"
+        alt=""
+      />
     </header>
   );
 };
