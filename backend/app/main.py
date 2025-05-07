@@ -5,6 +5,7 @@ from fastapi.openapi.utils import get_openapi
 from app.api.v1 import router as api_router
 from app.config import redis_client
 from loguru import logger
+from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 import warnings
 
@@ -63,7 +64,7 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 
-
+frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
 app.mount("/static", StaticFiles(directory="frontend/dist", html=True), name="static")
 
 
