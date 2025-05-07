@@ -1,0 +1,246 @@
+.chatWidget {
+  display: flex;
+  flex-direction: column;
+  min-width: 375px;
+  background: linear-gradient(232.68deg, #ffffff 5.05%, #e9e5ff 107.06%);
+  border-radius: 30px;
+}
+
+.chatWidgetHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 21px 86px 15px 29px;
+  gap: 17px;
+}
+
+.chatWidgetTitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 15px;
+  border-bottom: 1.5px solid #6945ed;
+}
+
+.chatWidgetTitle > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 1px;
+}
+
+.chatWidgetTitle > div > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-size: 18px;
+  line-height: 22px;
+  color: #6945ed;
+  margin: 0;
+}
+
+.chatWidgetTitle > div > p {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  color: #09c993;
+  margin: 0;
+}
+
+.chatWidgetBody {
+  padding: 0 24px;
+}
+
+.chatWidgetBotMessage {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 0px;
+  gap: 9px;
+}
+
+.chatWidgetBotMessageContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 18px 20px;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 25px 25px 25px 0px;
+}
+
+.chatWidgetBotMessageContainer > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-size: 13px;
+  line-height: 18px;
+  margin: 0;
+}
+
+.chatWidgetPreviewMessages {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 20px;
+}
+
+.commonQuestions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 18px;
+}
+
+.commonQuestionsTitle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 5px;
+}
+
+.commonQuestionsTitle > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+  color: #3f3f3f;
+  margin: 0;
+}
+
+.commonQuestionsList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 8px;
+}
+
+.commonQuestionsList > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 30px;
+}
+
+.commonQuestionsList > div > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+  color: #3e3e3e;
+  margin: 0;
+}
+
+.services {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 18px;
+}
+
+.servicesTitle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 5px;
+}
+
+.servicesTitle > h3 {
+  font-family: var(--unbounded-font);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+  color: #3f3f3f;
+  margin: 0;
+}
+
+.servicesList {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.servicesList > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0px;
+  width: 154.5px;
+  height: 40px;
+  background: #ffffff;
+  border-radius: 30px;
+}
+
+.servicesList > div > p {
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: center;
+  color: #3e3e3e;
+  margin: 0;
+}
+
+.chatWidgetInput {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px 0px 0px 22px;
+  gap: 10px;
+  isolation: isolate;
+  background: #ffffff;
+  box-shadow: 5px 4px 20px rgba(0, 0, 0, 0.13);
+  border-radius: 17px;
+}
+
+.chatWidgetInput > input {
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 24px;
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 16px;
+  color: #6945ed;
+}
+
+.chatWidgetInput > input::placeholder {
+  color: #6945ed;
+  font-family: var(--montserrat-font);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 16px;
+}
