@@ -64,7 +64,7 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 
-frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
+frontend_path = Path(__file__).parent.parent / "frontend_dist"
 app.mount("/static", StaticFiles(directory="frontend/dist", html=True), name="static")
 
 

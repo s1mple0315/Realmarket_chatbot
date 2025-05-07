@@ -1,6 +1,8 @@
-FROM node:20
+FROM node:20 AS builder
+
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN yarn 
+RUN yarn
+
 COPY . .
-CMD ["yarn", "dev"]
+RUN yarn build
