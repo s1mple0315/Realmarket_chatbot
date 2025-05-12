@@ -43,7 +43,9 @@ const ChatWidget = () => {
         const response = await fetch(
           "http://localhost:8000/api/v1/assistants/",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              Authorization: `Bearer ${eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiZXhwIjoxNzQ2NzA4NjY3fQ._3pBb3NDMttmxpztcjAwyjsbbHFh0GKkJmcRogjpEDQ}`,
+            },
           }
         );
         const data = await response.json();
@@ -73,7 +75,7 @@ const ChatWidget = () => {
     if (!selectedAssistantId || !token) return;
 
     ws.current = new WebSocket(
-      `ws://localhost:8000/api/v1/assistants/${selectedAssistantId}/ws?token=${token}`
+      `ws://localhost:8000/api/v1/assistants/${asst_UuIw5XTfFsHlexVgWS8hXjUH}/ws?token=${eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiZXhwIjoxNzQ2NzA4NjY3fQ._3pBb3NDMttmxpztcjAwyjsbbHFh0GKkJmcRogjpEDQ}`
     );
 
     ws.current.onopen = () => {
@@ -127,33 +129,39 @@ const ChatWidget = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const sendMessage = () => {
-    if (
-      !messageInput.trim() ||
-      !ws.current ||
-      ws.current.readyState !== WebSocket.OPEN
-    ) {
-      if (!messageInput.trim()) {
-        setMessages((prev) => [
-          ...prev,
-          { sender: "System", content: "Please enter a message." },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            sender: "System",
-            content: "Not connected to an assistant. Please select one.",
-          },
-        ]);
+  const sendMessage = useCallback(
+    debounce(() => {
+      if (
+        !messageInput.trim() ||
+        !ws.current ||
+        ws.current.readyState !== WebSocket.OPEN
+      ) {
+        if (!messageInput.trim()) {
+          setMessages((prev) => [
+            ...prev,
+            { sender: "System", content: "Please enter a message." },
+          ]);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            {
+              sender: "System",
+              content: "Not connected to an assistant. Please select one.",
+            },
+          ]);
+        }
+        return;
       }
-      return;
-    }
 
-    setMessages((prev) => [...prev, { sender: "User", content: messageInput }]);
-    ws.current.send(JSON.stringify({ message: messageInput }));
-    setMessageInput("");
-  };
+      setMessages((prev) => [
+        ...prev,
+        { sender: "User", content: messageInput },
+      ]);
+      ws.current.send(JSON.stringify({ message: messageInput }));
+      setMessageInput("");
+    }, 300),
+    [messageInput, ws.current]
+  );
 
   const toggleChatbot = () => {
     setIsOpen(!isOpen);

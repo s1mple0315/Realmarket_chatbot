@@ -31,11 +31,13 @@ origins = [
     "http://localhost:4000",
     "http://localhost:4000/",
     "http://localhost:4000/login",
+    "http://localhost:4000/register",
+    "http://localhost:5500",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*", origins],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,8 +66,9 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 
-frontend_path = Path(__file__).parent.parent / "frontend_dist"
-app.mount("/static", StaticFiles(directory="frontend/dist", html=True), name="static")
+from fastapi.staticfiles import StaticFiles
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.on_event("startup")

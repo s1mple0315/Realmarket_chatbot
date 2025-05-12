@@ -3,8 +3,8 @@ version: "3.8"
 services:
   backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -18,7 +18,7 @@ services:
       mongodb:
         condition: service_healthy
     volumes:
-      - ./backend:/app/backend
+      - ./backend:/app
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
       interval: 30s
@@ -26,19 +26,20 @@ services:
       retries: 3
 
   frontend:
-    image: node:20
-    working_dir: /app
-    command: sh -c "yarn install && yarn dev"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "4000:4000"
     environment:
-      - VITE_API_URL=http://localhost:8000/api/v1
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - VITE_API_URL=http://backend:8000/api/v1
     depends_on:
       backend:
         condition: service_healthy
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: yarn dev
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:4000 || exit 1"]
       interval: 30s
@@ -62,7 +63,7 @@ services:
     volumes:
       - mongo_data:/data/db
     expose:
-      - 27018
+      - 27017
     ports:
       - "27018:27017"
     healthcheck:

@@ -5,24 +5,34 @@ import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 4000,
-    host: "0.0.0.0",
-    watch: {
-      usePolling: true,
-    },
-  },
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-        widget: resolve(__dirname, "public/widget.html"),
-      },
-      output: {
-        entryFileNames: "assets/[name].js",
+export default defineConfig(({}) => {
+  return {
+    plugins: [react()],
+    server: {
+      port: 4000,
+      host: "0.0.0.0",
+      watch: {
+        usePolling: true,
       },
     },
-  },
+    // build: {
+    //   lib: {
+    //     entry: resolve(__dirname, "src/widget-entry.jsx"),
+    //     name: "ChatWidget",
+    //     fileName: "chat-widget",
+    //     formats: ["umd"],
+    //   },
+    //   rollupOptions: {
+    //     external: ["react", "react-dom"],
+    //     output: {
+    //       globals: {
+    //         react: "React",
+    //         "react-dom": "ReactDOM",
+    //       },
+    //     },
+    //   },
+    //   outDir: "dist",
+    //   emptyOutDir: true,
+    // },
+  };
 });
