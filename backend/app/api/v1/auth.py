@@ -11,7 +11,7 @@ from app.models.user import User
 router = APIRouter()
 
 
-@router.post("/register", response_model=User)
+@router.post("/register", response_model=User, include_in_schema=False)
 async def register_user_route(user: User):
     new_user = await register_user(user)
     if not new_user:

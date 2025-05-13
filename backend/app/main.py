@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi_limiter import FastAPILimiter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
@@ -9,9 +9,42 @@ from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 import warnings
 
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
+from fastapi.responses import HTMLResponse
+
+
 warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
+
+security = HTTPBasic()
+
+
+def basic_auth(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = "admin"
+    correct_password = "password"
+
+    if (
+        credentials.username != correct_username
+        or credentials.password != correct_password
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return True
+
+
+@app.get("/docs", include_in_schema=False)
+async def get_docs(auth: bool = Depends(basic_auth)):
+    return get_swagger_ui_html(openapi_url="/openapi.json", title="Docs")
+
+
+@app.get("/redoc", include_in_schema=False)
+async def get_redoc(auth: bool = Depends(basic_auth)):
+    return get_redoc_html(openapi_url="/openapi.json", title="ReDoc")
 
 
 class AddUserIDToRequest:

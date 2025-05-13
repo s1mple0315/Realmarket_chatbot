@@ -15,13 +15,11 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional, List, Dict, Any
 import logging
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Initialize OpenAI client
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise HTTPException(
@@ -107,7 +105,6 @@ async def create_assistant(
         }
         await db.assistants.insert_one(assistant_data)
 
-        # Add the assistant_id to the user's assistants array
         user = await db.users.find_one({"email": user_id})
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
@@ -217,13 +214,11 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional, List, Dict, Any
 import logging
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Initialize OpenAI client
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise HTTPException(
@@ -234,7 +229,6 @@ if not OPENAI_API_KEY:
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 
-# Request models
 class Tool(BaseModel):
     type: str = Field(
         ..., description="Tool type, e.g., 'code_interpreter' or 'file_search'"
@@ -274,7 +268,6 @@ async def create_assistant(
         if len(tools) > 128:
             raise HTTPException(status_code=400, detail="Maximum 128 tools allowed")
 
-        # Prepare tool_resources conditionally
         tool_resources = request.tool_resources or {}
         if (
             "code_interpreter" in [tool["type"] for tool in tools]
@@ -287,7 +280,7 @@ async def create_assistant(
                     detail="At least one valid file ID is required for code_interpreter, and maximum 20 files allowed.",
                 )
         else:
-            tool_resources = None  # Exclude tool_resources if no valid file_ids
+            tool_resources = None
 
         assistant = client.beta.assistants.create(
             name=assistant_name,
@@ -309,7 +302,6 @@ async def create_assistant(
         }
         await db.assistants.insert_one(assistant_data)
 
-        # Add the assistant_id to the user's assistants array
         user = await db.users.find_one({"email": user_id})
         if not user:
             raise HTTPException(status_code=404, detail="User not found")

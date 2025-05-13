@@ -6,19 +6,15 @@ import logging
 from jose import JWTError, jwt
 from app.services.auth_service import SECRET_KEY, ALGORITHM
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# OAuth2 scheme for Bearer token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
-# Configuration (adjust for production)
-BACKEND_WS_URL = "ws://localhost:8000/api/v1/assistants/assistant_id/ws"
+BACKEND_WS_URL = f"ws://localhost:8000/api/v1/assistants/assistant_id/ws"
 
-# Widget JavaScript template
 WIDGET_SCRIPT = """
 (function () {
   // Ensure DOM is ready
@@ -38,9 +34,24 @@ WIDGET_SCRIPT = """
     widgetDiv.innerHTML = `
       <div id="chat-widget" style="display: none;">
         <div class="chat-header">
-          <button id="close-chat-btn" aria-label="Toggle chatbot">X</button>
+          <button id="close-chat-btn" aria-label="Toggle chatbot">
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.57 6.43L3.5 12.5L9.57 18.57" stroke="#6945ED" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M20.5 12.5H3.67001" stroke="#6945ED" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
           <div class="chat-title">
-            <img src="/static/logo.png" alt="Logo" width="30" />
+            <svg width="48" height="49" viewBox="0 0 48 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_102_3776)">
+              <rect y="3.76923" width="44.2353" height="45.2308" rx="8" fill="#6945ED"/>
+              <path d="M43.6263 1.43537C45.3124 1.43545 46.7063 2.79703 46.7063 4.52131V11.202C46.7063 12.8937 45.3203 14.2878 43.6263 14.2879H36.9661C35.2798 14.2879 33.886 12.9264 33.886 11.202V4.52131C33.8861 2.83735 35.2396 1.43537 36.9661 1.43537H43.6263Z" fill="#6945ED" stroke="white" stroke-width="2"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_102_3776">
+              <rect width="48" height="49" fill="white"/>
+              </clipPath>
+              </defs>
+            </svg>
             <div>
               <h3>ИИ-ассистент</h3>
               <p>Онлайн</p>
@@ -48,9 +59,22 @@ WIDGET_SCRIPT = """
           </div>
         </div>
         <div class="chat-body">
-          <div class="welcome-message">
-            <img src="/static/bot-icon.png" alt="Bot" width="20" />
-            <p>Привет! Меня зовут Realbot, я ИИ ассистент студии разработки RealBrand. Чем могу вам помочь?</p>
+          <div class="bot-message">
+            <div class="bot-message-avatar">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_102_3766)">
+                <rect x="0.5" y="1.65384" width="13.8235" height="13.8462" rx="3" fill="#6945ED"/>
+                <path d="M14.1338 0.745605C14.7535 0.745697 15.2832 1.23879 15.2832 1.88428V3.9292C15.2832 4.56325 14.7574 5.06778 14.1338 5.06787H12.0527C11.4329 5.06787 10.9023 4.57475 10.9023 3.9292V1.88428C10.9023 1.25402 11.4174 0.745605 12.0527 0.745605H14.1338Z" fill="#6945ED" stroke="white"/>
+                </g>
+                <defs>
+                <clipPath id="clip0_102_3766">
+                <rect width="15" height="15" fill="white" transform="translate(0.5 0.5)"/>
+                </clipPath>
+                </defs>
+              </svg>
+
+            </div>
+            <div class="bot-message-text"> <p>Привет! Меня зовут Realbot, я ИИ ассистент студии разработки RealBrand. Чем могу вам помочь?</p></div>
           </div>
           <div class="common-questions">
             <h4>Частые вопросы</h4>
@@ -73,8 +97,11 @@ WIDGET_SCRIPT = """
     // Inject CSS
     const style = document.createElement("style");
     style.textContent = `
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
+      
       #chat-widget {
-        min-width: 375px;
+        max-width: 375px;
         background: linear-gradient(232.68deg, #ffffff 5.05%, #e9e5ff 107.06%);
         border-radius: 30px;
         position: fixed;
@@ -90,6 +117,9 @@ WIDGET_SCRIPT = """
         border-bottom: 1.5px solid #6945ed;
       }
       .chat-header button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background: none;
         border: none;
         cursor: pointer;
@@ -106,6 +136,7 @@ WIDGET_SCRIPT = """
         font-size: 18px;
       }
       .chat-title p {
+        font-family: "Unbounded"
         color: #09c993;
         margin: 0;
         font-size: 15px;
@@ -113,14 +144,33 @@ WIDGET_SCRIPT = """
       .chat-body {
         padding: 15px;
       }
-      .welcome-message {
+      
+      .bot-message {
         display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
         gap: 10px;
-        background: #ffffff;
+      }
+      
+      .bot-message-avatar {
+        width: 40px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 7.5px;
+        background-color: #ffffff;
+      }
+      
+      .bot-message-text {
         padding: 15px;
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
         border-radius: 25px 25px 25px 0;
       }
-      .welcome-message p {
+      
+      .bot-message-text p {
         margin: 0;
         font-size: 13px;
       }
@@ -130,7 +180,9 @@ WIDGET_SCRIPT = """
       .common-questions h4 {
         font-size: 13px;
         margin: 0 0 10px;
+        text-align: center;
       }
+      
       .common-questions .question-btn {
         background: #ffffff;
         padding: 10px;
@@ -138,29 +190,49 @@ WIDGET_SCRIPT = """
         cursor: pointer;
         margin: 5px 0;
         text-align: center;
+        font-family: 'Montserrat';
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 16px;
+        color: #3E3E3E;
       }
+      
       .chat-messages {
         max-height: 200px;
         overflow-y: auto;
         margin-bottom: 10px;
       }
+      
       .chat-messages div {
         margin: 5px 0;
       }
+      
       .chat-input {
         display: flex;
+        justify-content: space-between;
         gap: 10px;
         background: #ffffff;
         padding: 10px;
         border-radius: 17px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.13);
       }
+      
       .chat-input input {
+        flex: 1;
         border: none;
         outline: none;
-        flex: 1;
         font-size: 13px;
+        font-family: 'Montserrat';
+        font-style: normal;
+        font-weight: 600;
+        line-height: 16px;
+        color: #6945ED !important;
       }
+      
+      .chat-input input::placeholder {
+        color: #6945ED !important;
+      }
+      
       .chat-input button {
         background: none;
         border: none;
