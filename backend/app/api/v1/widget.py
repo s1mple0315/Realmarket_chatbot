@@ -13,14 +13,13 @@ router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
-BACKEND_WS_URL = f"ws://localhost:8000/api/v1/assistants/assistant_id/ws"
+BACKEND_WS_URL = "ws://localhost:8000/api/v1/assistants/assistants"
 
 WIDGET_SCRIPT = """
 (function () {
   // Ensure DOM is ready
   function initWidget() {
     console.log("Initializing chat widget");
-
     // Create widget container
     let widgetDiv = document.getElementById("chatbot-widget-root");
     if (!widgetDiv) {
@@ -29,7 +28,6 @@ WIDGET_SCRIPT = """
       widgetDiv.id = "chatbot-widget-root";
       document.body.appendChild(widgetDiv);
     }
-
     // Inject widget HTML
     widgetDiv.innerHTML = `
       <div id="chat-widget" style="display: none;">
@@ -72,7 +70,6 @@ WIDGET_SCRIPT = """
                 </clipPath>
                 </defs>
               </svg>
-
             </div>
             <div class="bot-message-text"> <p>Привет! Меня зовут Realbot, я ИИ ассистент студии разработки RealBrand. Чем могу вам помочь?</p></div>
           </div>
@@ -93,13 +90,11 @@ WIDGET_SCRIPT = """
         <img src="/static/logo.png" alt="Chat" width="30" />
       </button>
     `;
-
     // Inject CSS
     const style = document.createElement("style");
     style.textContent = `
-      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap');
-      @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
-      
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat :ital@0;1&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Unbounded :wght@200..900&display=swap');
       #chat-widget {
         max-width: 375px;
         background: linear-gradient(232.68deg, #ffffff 5.05%, #e9e5ff 107.06%);
@@ -136,7 +131,7 @@ WIDGET_SCRIPT = """
         font-size: 18px;
       }
       .chat-title p {
-        font-family: "Unbounded"
+        font-family: "Unbounded";
         color: #09c993;
         margin: 0;
         font-size: 15px;
@@ -144,14 +139,12 @@ WIDGET_SCRIPT = """
       .chat-body {
         padding: 15px;
       }
-      
       .bot-message {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
         gap: 10px;
       }
-      
       .bot-message-avatar {
         width: 40px;
         border-radius: 6px;
@@ -161,7 +154,6 @@ WIDGET_SCRIPT = """
         padding: 7.5px;
         background-color: #ffffff;
       }
-      
       .bot-message-text {
         padding: 15px;
         display: flex;
@@ -169,7 +161,6 @@ WIDGET_SCRIPT = """
         background: #ffffff;
         border-radius: 25px 25px 25px 0;
       }
-      
       .bot-message-text p {
         margin: 0;
         font-size: 13px;
@@ -182,7 +173,6 @@ WIDGET_SCRIPT = """
         margin: 0 0 10px;
         text-align: center;
       }
-      
       .common-questions .question-btn {
         background: #ffffff;
         padding: 10px;
@@ -196,17 +186,14 @@ WIDGET_SCRIPT = """
         line-height: 16px;
         color: #3E3E3E;
       }
-      
       .chat-messages {
         max-height: 200px;
         overflow-y: auto;
         margin-bottom: 10px;
       }
-      
       .chat-messages div {
         margin: 5px 0;
       }
-      
       .chat-input {
         display: flex;
         justify-content: space-between;
@@ -216,7 +203,6 @@ WIDGET_SCRIPT = """
         border-radius: 17px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.13);
       }
-      
       .chat-input input {
         flex: 1;
         border: none;
@@ -228,11 +214,9 @@ WIDGET_SCRIPT = """
         line-height: 16px;
         color: #6945ED !important;
       }
-      
       .chat-input input::placeholder {
         color: #6945ED !important;
       }
-      
       .chat-input button {
         background: none;
         border: none;
@@ -240,30 +224,20 @@ WIDGET_SCRIPT = """
       }
     `;
     document.head.appendChild(style);
-
     // Client-side JavaScript
     let ws = null;
-    const token = window.chatWidgetToken || "${__TOKEN__}";
-    const selectedAssistantId = "${__SELECTED_BOT_ID__}";
-
     window.toggleChat = function () {
-      console.log("toggleChat called");
       const widget = document.getElementById("chat-widget");
       if (widget) {
-        console.log("Current display:", widget.style.display);
         widget.style.display = widget.style.display === "none" ? "block" : "none";
-        console.log("New display:", widget.style.display);
       } else {
         console.error("chat-widget element not found");
       }
     };
-
     window.sendMessage = function (message) {
-      console.log("sendMessage called with:", message);
       const input = document.getElementById("message-input");
       const text = message || input.value.trim();
       if (!text) {
-        console.log("No message to send");
         return;
       }
       if (!ws || ws.readyState !== WebSocket.OPEN) {
@@ -275,21 +249,18 @@ WIDGET_SCRIPT = """
       ws.send(JSON.stringify({ message: text }));
       if (!message) input.value = "";
     };
-
     function connectWebSocket() {
-      console.log("Connecting WebSocket");
-      if (!selectedAssistantId || !token) {
+      if (!assistantId || !token) {
         addMessage("System", "Error: Assistant ID or token missing.");
         console.error("Missing assistant ID or token");
         return;
       }
-      ws = new WebSocket(`${BACKEND_WS_URL}${selectedAssistantId}/ws?token=${token}`);
+      const BACKEND_WS_URL = "ws://localhost:8000/api/v1/assistants/";
+      ws = new WebSocket(`${BACKEND_WS_URL}${assistantId}/ws?token=${token}`);
       ws.onopen = () => {
         addMessage("System", "Connected to assistant!");
-        console.log("WebSocket connected");
       };
       ws.onmessage = (event) => {
-        console.log("WebSocket message received:", event.data);
         const data = JSON.parse(event.data);
         if (data.error) {
           addMessage("System", "Error: " + data.error);
@@ -301,80 +272,64 @@ WIDGET_SCRIPT = """
       };
       ws.onclose = () => {
         addMessage("System", "Disconnected from assistant.");
-        console.log("WebSocket disconnected");
       };
       ws.onerror = (error) => {
         addMessage("System", "WebSocket error: " + error);
         console.error("WebSocket error:", error);
       };
     }
-
     function addMessage(sender, content) {
-      console.log("Adding message:", sender, content);
       const messages = document.getElementById("chat-messages");
       const msgDiv = document.createElement("div");
       msgDiv.innerHTML = `<strong>${sender}:</strong> ${content}`;
       messages.appendChild(msgDiv);
       messages.scrollTop = messages.scrollHeight;
     }
-
     // Set up event listeners
     const toggleBtn = document.getElementById("chat-toggle");
     const closeBtn = document.getElementById("close-chat-btn");
     const sendBtn = document.getElementById("send-message-btn");
     const messageInput = document.getElementById("message-input");
     const questionButtons = document.querySelectorAll(".question-btn");
-
     if (toggleBtn) {
       toggleBtn.addEventListener("click", () => {
-        console.log("Toggle button clicked");
         window.toggleChat();
       });
     } else {
       console.error("chat-toggle button not found");
     }
-
     if (closeBtn) {
       closeBtn.addEventListener("click", () => {
-        console.log("Close button clicked");
         window.toggleChat();
       });
     } else {
       console.error("close-chat-btn not found");
     }
-
     if (sendBtn) {
       sendBtn.addEventListener("click", () => {
-        console.log("Send button clicked");
         window.sendMessage();
       });
     } else {
       console.error("send-message-btn not found");
     }
-
     if (messageInput) {
       messageInput.addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
-          console.log("Enter key pressed in input");
           window.sendMessage();
         }
       });
     } else {
       console.error("message-input not found");
     }
-
     questionButtons.forEach(button => {
       button.addEventListener("click", () => {
         const message = button.getAttribute("data-message");
-        console.log("Question button clicked:", message);
         window.sendMessage(message);
       });
     });
-
     // Auto-connect to WebSocket
     connectWebSocket();
   }
-
   // Run initWidget when DOM is ready
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initWidget);

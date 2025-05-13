@@ -8,6 +8,8 @@ from loguru import logger
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 import warnings
+from fastapi.staticfiles import StaticFiles
+
 
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
@@ -17,6 +19,8 @@ from fastapi.responses import HTMLResponse
 warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
 
 app = FastAPI(docs_url=None, redoc_url=None)
+
+app.include_router(api_router, prefix="/api/v1")
 
 security = HTTPBasic()
 
@@ -99,8 +103,6 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 
-from fastapi.staticfiles import StaticFiles
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -127,6 +129,3 @@ async def startup():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
-
-
-app.include_router(api_router, prefix="/api/v1")
