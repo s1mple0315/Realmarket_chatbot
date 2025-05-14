@@ -14,11 +14,12 @@ from datetime import datetime
 from pydantic import BaseModel, Field, validator
 from typing import Optional, List, Dict, Any
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1/assistants", tags=["assistants"])
+router = APIRouter()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
@@ -46,9 +47,7 @@ class Tool(BaseModel):
 
 class CreateAssistantRequest(BaseModel):
     name: Optional[str] = None
-    instructions: Optional[str] = (
-        "You are a helpful assistant for an e-commerce chatbot."
-    )
+    instructions: Optional[str] = "You are a helpful assistant for a website."
     model: Optional[str] = "gpt-4o-mini"
     tools: Optional[List[Tool]] = None
     tool_resources: Optional[Dict[str, Any]] = None
@@ -77,6 +76,16 @@ class UserDataRequest(BaseModel):
     preferences: Optional[Dict[str, Any]] = None
 
 
+class ContentRequest(BaseModel):
+    content_type: str = Field(
+        ..., description="Type of content, e.g., 'products', 'articles', 'services'"
+    )
+    data: List[Dict[str, Any]] = Field(
+        ...,
+        description="List of content items, e.g., [{'name': 'Phone', 'price': 599}, ...]",
+    )
+
+
 @router.post("/")
 async def create_assistant(
     request: CreateAssistantRequest, user_id: str = Depends(verify_token)
@@ -98,6 +107,16 @@ async def create_assistant(
                 raise HTTPException(
                     status_code=400,
                     detail="At least one valid file ID is required for code_interpreter, and maximum 20 files allowed.",
+                )
+        elif (
+            "file_search" in [tool["type"] for tool in tools]
+            and "file_search" in tool_resources
+        ):
+            file_ids = tool_resources["file_search"].get("file_ids", [])
+            if not file_ids or len(file_ids) > 20:
+                raise HTTPException(
+                    status_code=400,
+                    detail="At least one valid file ID is required for file_search, and maximum 20 files allowed.",
                 )
         else:
             tool_resources = None
@@ -264,7 +283,7 @@ async def get_assistant_config(assistant_id: str, user_id: str = Depends(verify_
     config = assistant.get(
         "config",
         {
-            "system_prompt": "You are a helpful assistant for an e-commerce chatbot.",
+            "system_prompt": "You are a helpful assistant for a website.",
             "tone": "casual",
             "language": "ru",
             "data_collection": {"email": True, "name": False},
@@ -304,6 +323,71 @@ async def collect_user_data(
         )
 
 
+@router.post("/{assistant_id}/content")
+async def upload_content(
+    assistant_id: str, request: ContentRequest, user_id: str = Depends(verify_token)
+):
+    logger.info(f"Uploading content for assistant_id: {assistant_id}")
+    assistant = await db.assistants.find_one(
+        {"assistant_id": assistant_id, "user_id": user_id}
+    )
+    if not assistant:
+        raise HTTPException(
+            status_code=404, detail="Assistant not found or not authorized"
+        )
+
+    try:
+        content_data = {
+            "assistant_id": assistant_id,
+            "content_type": request.content_type,
+            "data": request.data,
+            "source": "json",
+            "created_at": datetime.utcnow(),
+        }
+        await db.assistant_content.replace_one(
+            {
+                "assistant_id": assistant_id,
+                "content_type": request.content_type,
+                "source": "json",
+            },
+            content_data,
+            upsert=True,
+        )
+        return {
+            "message": f"Content '{request.content_type}' uploaded for assistant {assistant_id}"
+        }
+    except Exception as e:
+        logger.error(f"Error uploading content: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to upload content: {str(e)}"
+        )
+
+
+@router.get("/{assistant_id}/content")
+async def get_content(
+    assistant_id: str,
+    content_type: Optional[str] = None,
+    user_id: str = Depends(verify_token),
+):
+    logger.info(f"Fetching content for assistant_id: {assistant_id}")
+    assistant = await db.assistants.find_one(
+        {"assistant_id": assistant_id, "user_id": user_id}
+    )
+    if not assistant:
+        raise HTTPException(
+            status_code=404, detail="Assistant not found or not authorized"
+        )
+
+    query = {"assistant_id": assistant_id}
+    if content_type:
+        query["content_type"] = content_type
+
+    contents = await db.assistant_content.find(query).to_list(length=100)
+    for content in contents:
+        content.pop("_id", None)
+    return {"contents": contents}
+
+
 @router.websocket("/{assistant_id}/ws")
 async def chat_with_assistant(websocket: WebSocket, assistant_id: str):
     await websocket.accept()
@@ -330,18 +414,69 @@ async def chat_with_assistant(websocket: WebSocket, assistant_id: str):
         thread = client.beta.threads.create()
         thread_id = thread.id
 
-        # Add system prompt from config
+        # Add system prompt and content
         config = assistant.get(
             "config",
             {
-                "system_prompt": "You are a helpful assistant for an e-commerce chatbot.",
+                "system_prompt": "You are a helpful assistant for a website.",
                 "tone": "casual",
                 "language": "ru",
             },
         )
         system_prompt = config.get("system_prompt")
+
+        # Fetch content (JSON, file-based, crawled)
+        contents = await db.assistant_content.find(
+            {"assistant_id": assistant_id}
+        ).to_list(length=10)
+        content_context = []
+        for content in contents:
+            content_type = content.get("content_type")
+            data = content.get("data", [])
+            source = content.get("source", "unknown")
+            file_id = content.get("file_id")
+            url = content.get("url")
+            content_str = f"Content type: {content_type}\nSource: {source}\nData: {json.dumps(data, ensure_ascii=False)}"
+            if file_id:
+                content_str += f"\nFile ID: {file_id}"
+            if url:
+                content_str += f"\nURL: {url}"
+            content_context.append(content_str)
+
+        # Fetch file metadata
+        files = await db.assistant_files.find({"assistant_id": assistant_id}).to_list(
+            length=10
+        )
+        file_context = [
+            f"File: {f['filename']} (ID: {f['file_id']}, Type: {f['content_type']})"
+            for f in files
+        ]
+
+        # Fetch crawl history
+        crawls = await db.crawler_history.find({"assistant_id": assistant_id}).to_list(
+            length=10
+        )
+        crawl_context = [
+            f"Crawled URL: {c['url']} (Type: {c['content_type']})" for c in crawls
+        ]
+
+        content_message = (
+            "\n\n".join(content_context)
+            if content_context
+            else "No specific content available."
+        )
+        file_message = (
+            "\n\n".join(file_context) if file_context else "No files available."
+        )
+        crawl_message = (
+            "\n\n".join(crawl_context)
+            if crawl_context
+            else "No crawled URLs available."
+        )
+        full_prompt = f"{system_prompt}\n\nAvailable content:\n{content_message}\n\nAvailable files:\n{file_message}\n\nCrawled URLs:\n{crawl_message}"
+
         client.beta.threads.messages.create(
-            thread_id=thread_id, role="system", content=system_prompt
+            thread_id=thread_id, role="system", content=full_prompt
         )
 
         await websocket.send_json({"status": "connected", "thread_id": thread_id})
