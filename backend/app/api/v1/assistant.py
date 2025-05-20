@@ -388,6 +388,23 @@ async def get_content(
     return {"contents": contents}
 
 
+@router.get("/conversations")
+async def get_user_conversations(user_id: str = Depends(verify_token)):
+    logger.info(f"Fetching conversations for user_id: {user_id}")
+    try:
+        conversations = await db.conversations.find({"user_id": user_id}).to_list(
+            length=1000
+        )
+        for conv in conversations:
+            conv.pop("_id", None)
+        return {"conversations": conversations}
+    except Exception as e:
+        logger.error(f"Failed to fetch conversations: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch conversations: {str(e)}"
+        )
+
+
 @router.websocket("/{assistant_id}/ws")
 async def chat_with_assistant(websocket: WebSocket, assistant_id: str):
     await websocket.accept()
