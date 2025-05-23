@@ -389,14 +389,40 @@ async def get_content(
 
 
 @router.get("/conversations")
-async def get_user_conversations(user_id: str = Depends(verify_token)):
-    logger.info(f"Fetching conversations for user_id: {user_id}")
+async def get_user_conversations(
+    user_id: str = Depends(verify_token),
+    skip: int = 0,
+    limit: int = 50,
+    tab: str = "all",
+):
+    logger.info(
+        f"Fetching conversations for user_id: {user_id}, tab: {tab}, skip: {skip}, limit: {limit}"
+    )
     try:
-        conversations = await db.conversations.find({"user_id": user_id}).to_list(
-            length=1000
+        query = {"user_id": user_id}
+        if tab == "today":
+            start_of_day = datetime.utcnow().replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
+            query["created_at"] = {"$gte": start_of_day}
+
+        conversations = (
+            await db.conversations.find(query)
+            .skip(skip)
+            .limit(limit)
+            .to_list(length=limit)
         )
+        if not conversations:
+            logger.info("No conversations found")
+            return {"conversations": []}
+
         for conv in conversations:
             conv.pop("_id", None)
+            conv["read_at"] = conv.get("read_at", None)
+            conv["readStatus"] = bool(conv["read_at"])
+            conv["unread"] = not conv["readStatus"]
+            conv["messages"] = conv.get("messages", [])
+
         return {"conversations": conversations}
     except Exception as e:
         logger.error(f"Failed to fetch conversations: {str(e)}")
@@ -405,11 +431,31 @@ async def get_user_conversations(user_id: str = Depends(verify_token)):
         )
 
 
+@router.put("/conversations/{thread_id}/read")
+async def mark_conversation_read(thread_id: str, user_id: str = Depends(verify_token)):
+    logger.info(
+        f"Marking conversation as read: thread_id={thread_id}, user_id={user_id}"
+    )
+    try:
+        result = await db.conversations.update_one(
+            {"thread_id": thread_id, "user_id": user_id},
+            {"$set": {"read_at": datetime.utcnow()}},
+        )
+        if result.modified_count == 0:
+            logger.warning(f"Conversation not found: thread_id={thread_id}")
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        return {"message": "Conversation marked as read"}
+    except Exception as e:
+        logger.error(f"Failed to mark conversation as read: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to mark conversation: {str(e)}"
+        )
+
+
 @router.websocket("/{assistant_id}/ws")
 async def chat_with_assistant(websocket: WebSocket, assistant_id: str):
     await websocket.accept()
     try:
-        # First message must contain token
         data = await websocket.receive_json()
         token = data.get("token")
         if not token:
@@ -431,7 +477,6 @@ async def chat_with_assistant(websocket: WebSocket, assistant_id: str):
         thread = client.beta.threads.create()
         thread_id = thread.id
 
-        # Add system prompt and content
         config = assistant.get(
             "config",
             {
@@ -442,7 +487,6 @@ async def chat_with_assistant(websocket: WebSocket, assistant_id: str):
         )
         system_prompt = config.get("system_prompt")
 
-        # Fetch content (JSON, file-based, crawled)
         contents = await db.assistant_content.find(
             {"assistant_id": assistant_id}
         ).to_list(length=10)

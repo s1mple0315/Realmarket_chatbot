@@ -67,6 +67,7 @@ origins = [
     "http://localhost",
     "http://localhost:4000",
     "http://localhost:4000/",
+    "http://localhost:4000/dashboard/dialogs",
     "http://localhost:4000/login",
     "http://localhost:4000/register",
     "http://localhost:5500",
